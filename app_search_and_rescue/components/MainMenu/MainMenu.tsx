@@ -1,0 +1,16 @@
+import style from "./MainMenu.module.css"
+import Icon from "../Icon";
+
+export function MainMenu(){
+    return (
+        <div className={style.mainmenu_container}>
+            <button className={style.mainmenu_post_missing}>
+                <h3 className="concert_one_regular">🚨Post missing pet🚨</h3>
+            </button>
+            <div className={style.mainmenu_posters}></div>
+            <button className={style.mainmenu_map}>
+                <h3 className="concert_one_regular">Map View</h3>
+            </button>
+        </div>
+    )
+}

@@ -1,0 +1,29 @@
+.page {
+	background-color: var(--background);
+	display: flex;
+	height: 100dvh;
+	width: 100dvw;
+	gap: 25px;
+}
+
+.main {
+	height: 100%;
+	width: 100%;
+	background-color: var(--foreground);
+	color: var(--text);
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: min-content 1fr;
+	justify-content: center;
+	align-items: center;
+	padding: 25px;
+}
+
+.main_title {
+	font-size: 63px;
+	width: 100%;
+	height: min-content;
+	text-align: center;
+	margin: 0px;
+	margin-bottom: 10px;
+}
