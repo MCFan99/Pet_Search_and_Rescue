@@ -1,5 +1,5 @@
 .page {
-	background-color: var(--background);
+	background-color: var(--foreground);
 	display: flex;
 	height: 100dvh;
 	width: 100dvw;
