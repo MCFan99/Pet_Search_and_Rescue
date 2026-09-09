@@ -2,6 +2,7 @@
 import styles from "./page.module.css";
 import Image from "next/image";
 import { useState, createContext, useRef } from "react";
+import PostMissing from "./PostMissing/page";
 import SideBar from "@/components/SideBar/SideBar";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
 import { ScreenContext } from "./contexts";
@@ -11,6 +12,11 @@ export default function Home() {
   return (
     <div className={`${styles.page} concert_one_regular`}>
       <ScreenContext.Provider value={[screen, setScreen]}>
+        {screen == "Post Missing" ? (
+          <PostMissing />
+        ) : (
+          <></>
+        )}
         <SideBar />
         {/* <ListsContext.Provider value={[lists, setLists]}> */}
         <div className={styles.main}>

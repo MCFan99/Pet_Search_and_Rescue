@@ -1,5 +1,5 @@
 .side_bar {
-    background-color: var(--foreground);
+    background-color: var(--tertiary);
     height: calc(100dvh-50px);
     width: min-content;
     display: grid;
