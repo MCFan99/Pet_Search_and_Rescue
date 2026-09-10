@@ -55,8 +55,8 @@
     padding: 10px;
 }
 
-.page_return {
-    grid-column: 2 / 4;
+.page_add_name {
+    grid-column: 2 / 3;
     grid-row: 1 / 2;
     display: flex;
     background-color: var(--foreground);
@@ -67,4 +67,92 @@
     flex-direction: column;
     justify-content: space-evenly;
     padding: 10px;
+}
+
+.page_add_name>input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-family: var(--main-font);
+    border-radius: 5px;
+    min-width: 400px;
+    font-size: 16px;
+    background-color: var(--tertiary);
+}
+
+.page_return {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    display: flex;
+    background-color: var(--foreground);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: 40px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    color: var(--text);
+}
+
+.page_add_location {
+    grid-column: 2 / 3;
+    grid-row: 2 / 4;
+    display: flex;
+    background-color: var(--foreground);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: 40px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+input::file-selector-button {
+  font-weight: bold;
+  color: dodgerblue;
+  padding: 0.5em;
+  border: thin solid grey;
+  border-radius: 3px;
+}
+
+.page_species {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+    display: flex;
+    background-color: var(--foreground);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: 40px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+.page_species>input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-family: var(--main-font);
+    border-radius: 5px;
+    min-width: 400px;
+    font-size: 16px;
+    background-color: var(--tertiary);
+}
+
+.page_post {
+    grid-column: 3 / 4;
+    grid-row: 3 / 4;
+    display: flex;
+    background-color: var(--foreground);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: 40px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    color: var(--text);
 }

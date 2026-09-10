@@ -23,6 +23,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     padding: 10px;
+    color: var(--text);
 }
 
 .mainmenu_posters {
@@ -51,4 +52,5 @@
     flex-direction: column;
     justify-content: space-evenly;
     padding: 10px;
+    color: var(--text);
 }
