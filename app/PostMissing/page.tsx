@@ -17,7 +17,7 @@ export default function PostMissing() {
                         <input type="name" placeholder={"Greg"} onChange={(e) => {}} />
                     </div>
                     <button className={`${style.page_return} concert_one_regular`} onClick={() => {redirect('/')}}>
-                        <p>Cancle Post</p>
+                        <p>Cancel Post</p>
                     </button>
                     <div className={`${style.page_add_location} concert_one_regular`}>
                         <h2>Last seen:</h2>

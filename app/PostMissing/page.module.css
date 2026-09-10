@@ -98,7 +98,9 @@
 .page_add_location {
     grid-column: 2 / 3;
     grid-row: 2 / 4;
-    display: flex;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     background-color: var(--foreground);
     border-radius: 25px;
     padding: 10px;
@@ -106,15 +108,28 @@
     align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
+    justify-items: center;
     padding: 10px;
+}
+.page_add_location>h2 {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    align-self: center;
+}
+
+.page_add_location>input {
+    grid-column: 1 / 2;
+    grid-row: 2 / 5;
 }
 
 input::file-selector-button {
-  font-weight: bold;
-  color: dodgerblue;
-  padding: 0.5em;
-  border: thin solid grey;
-  border-radius: 3px;
+    height: 100px;
+    width: 100px;
+    font-weight: bold;
+    color: dodgerblue;
+    padding: 0.5em;
+    border: thin solid grey;
+    border-radius: 3px;
 }
 
 .page_species {
