@@ -12,9 +12,9 @@ export default function SideBar() {
         <div className={styles.side_bar}>
             <div className={styles.side_bar_title}></div>
             <div className={styles.side_bar_redirect_list}>
-                <Redirect iconName="house" label="Main Menu" />
-                <Redirect iconName="pin" label="Map View" />
-                <Redirect iconName="missing" label="Lost Pets" />
+                <Redirect iconName="🏠 Home" label="Main Menu" />
+                <Redirect iconName="📍 Pin" label="Map View" />
+                <Redirect iconName="🔎 Missing" label="Lost Pets" />
             </div>
         </div>
     )
