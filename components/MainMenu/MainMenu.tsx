@@ -9,9 +9,11 @@ export function MainMenu(){
             <button className={style.mainmenu_post_missing} onClick={() => {redirect("/PostMissing")}}>
                 <h3 className="concert_one_regular">🚨 Post Missing Pet 🚨</h3>
             </button>
-            <div className={style.mainmenu_posters}></div>
+            <div className={style.mainmenu_posters}>
+                <h3 className="concert_one_regular">✔ No Pets Missing!</h3>
+            </div>
             <button className={style.mainmenu_map}>
-                <h3 className="concert_one_regular">Map View</h3>
+                <h3 className="concert_one_regular">🗺 Map View</h3>
             </button>
         </div>
     )
