@@ -5,6 +5,8 @@ import { useState, createContext, useRef } from "react";
 import PostMissing from "./PostMissing/page";
 import SideBar from "@/components/SideBar/SideBar";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
+import { LostPets } from "@/components/LostPets/LostPets";
+import { MapView } from "@/components/MapView/MapView";
 import { ScreenContext } from "./contexts";
 
 export default function Home() {
@@ -25,6 +27,16 @@ export default function Home() {
           </h1>
           {screen == "Main Menu" ? (
             <MainMenu />
+          ) : (
+            <></>
+          )}
+          {screen == "Lost Pets" ? (
+            <LostPets />
+          ) : (
+            <></>
+          )}
+          {screen == "Map View" ? (
+            <MapView />
           ) : (
             <></>
           )}
