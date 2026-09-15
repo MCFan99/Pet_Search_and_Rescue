@@ -14,7 +14,7 @@ export default function SideBar() {
             <div className={styles.side_bar_redirect_list}>
                 <Redirect iconName="🏠 Home" label="Main Menu" />
                 <Redirect iconName="📍 Pin" label="Map View" />
-                <Redirect iconName="🔎 Missing" label="Lost Pets" />
+                <Redirect iconName="🔎 Missing" label="Lost Pets" disableHover />
             </div>
         </div>
     )

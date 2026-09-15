@@ -50,6 +50,10 @@
     font-size: 50px;
 }
 
+.side_bar_redirect_no_hover:hover>span {
+    font-size: 45px;
+}
+
 .side_bar_redirect>span {
     font-size: 45px;
     transition: 250ms;
