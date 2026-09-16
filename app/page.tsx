@@ -7,6 +7,7 @@ import SideBar from "@/components/SideBar/SideBar";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
 import { LostPets } from "@/components/LostPets/LostPets";
 import { MapView } from "@/components/MapView/MapView";
+import { Settings } from "@/components/Settings/Settings";
 import { ScreenContext } from "./contexts";
 
 export default function Home() {
@@ -37,6 +38,11 @@ export default function Home() {
           )}
           {screen == "Map View" ? (
             <MapView />
+          ) : (
+            <></>
+          )}
+          {screen == "Settings" ? (
+            <Settings />
           ) : (
             <></>
           )}
