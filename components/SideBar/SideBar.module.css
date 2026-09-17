@@ -60,5 +60,5 @@
 }
 
 .side_bar_redirect_highlighted {
-    background-color: #0841dc;
+    background-color: var(--highlight);
 }

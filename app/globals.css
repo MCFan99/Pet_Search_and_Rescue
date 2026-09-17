@@ -9,10 +9,18 @@
 }
 
 :root {
-	--background: #ffffff;
+	--background: #82a8d7;
+  	--foreground: #6e7fcf;
+	--text: #cbeefe;
+	--tertiary: #5a66d7;
+	--highlight: #6771cb;
+
+	/* Old Default Colors:
+	--background: #376ef9;
   	--foreground: #0f53ff;
 	--text: #ededed;
 	--tertiary: #0b3296;
+	--highlight: #0841dc; */
 	--main-font: "Concert One", sans-serif;
 }
 
@@ -27,7 +35,36 @@
 		--background: #262626;
 	}
 }
+:root[data-theme="default"] {
+	--background: #82a8d7;
+  	--foreground: #6e7fcf;
+	--text: #cbeefe;
+	--tertiary: #5a66d7;
+	--highlight: #6771cb;
+}
 
+:root[data-theme="light"] {
+	--background: #d7e3f8;
+	--foreground: #e5eaf3;
+	--text: #4b4f52;
+	--tertiary: #97b2d2;
+	--highlight: #f8f9ff;
+}
+
+:root[data-theme="dark"] {
+	--background: #121314;
+	--foreground: #191a1b;
+	--text: #989898;
+	--tertiary: #373838;
+	--highlight: #2c2d2e;
+}
+
+/* :root[data-theme="dark"] {
+	--background: #262626;
+	--foreground: #171717;
+	--text: #ededed;
+	--tertiary: #333333;
+} */
 
 html,
 body {
@@ -87,3 +124,4 @@ button {
 button:hover {
 	transform: scale(1.05);
 }
+
