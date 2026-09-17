@@ -1,6 +1,4 @@
-'use client'
-
-import style from "./MainMenu.module.css"
+'use client'5import style from "./MainMenu.module.css"
 import Icon from "../Icon";
 import Image from "next/image";
 import { redirect } from "next/navigation";
