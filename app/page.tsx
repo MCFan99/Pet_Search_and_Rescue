@@ -7,7 +7,16 @@ import SideBar from "@/components/SideBar/SideBar";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
 import { LostPets } from "@/components/LostPets/LostPets";
 import { MapView } from "@/components/MapView/MapView";
-import { ScreenContext } from "./contexts";
+import { Settings } from "@/components/Settings/Settings";
+import { Login } from "@/components/Login/Login"
+import { SaveUserData } from "@/lib/firebase/database/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ScreenContext, UserContext } from "./contexts";
+
+export type User = {
+	uid: string,
+	name?: string,
+}
 
 export default function Home() {
 	const [user, setUser] = useState<User | null>(null);
@@ -53,37 +62,48 @@ export default function Home() {
 
   const [screen, setScreen] = useState<string>("Main Menu")
   return (
-    <div className={`${styles.page} concert_one_regular`}>
-      <ScreenContext.Provider value={[screen, setScreen]}>
-        {screen == "Post Missing" ? (
-          <PostMissing />
+    <UserContext.Provider value={[user, SetUser]}>
+      <div className={`${styles.page} concert_one_regular`}>
+        {user == null ? (
+          <Login />
         ) : (
-          <></>
+          <ScreenContext.Provider value={[screen, setScreen]}>
+            {screen == "Post Missing" ? (
+              <PostMissing />
+            ) : (
+              <></>
+            )}
+            <SideBar />
+            {/* <ListsContext.Provider value={[lists, setLists]}> */}
+            <div className={styles.main}>
+              <h1 className={styles.main_title}>
+                {screen}
+              </h1>
+              {screen == "Main Menu" ? (
+                <MainMenu />
+              ) : (
+                <></>
+              )}
+              {screen == "Lost Pets" ? (
+                <LostPets />
+              ) : (
+                <></>
+              )}
+              {screen == "Map View" ? (
+                <MapView />
+              ) : (
+                <></>
+              )}
+              {screen == "Settings" ? (
+                <Settings />
+              ) : (
+                <></>
+              )}
+            </div>
+            {/* </ListsContext.Provider> */}
+          </ScreenContext.Provider>
         )}
-        <SideBar />
-        {/* <ListsContext.Provider value={[lists, setLists]}> */}
-        <div className={styles.main}>
-          <h1 className={styles.main_title}>
-            {screen}
-          </h1>
-          {screen == "Main Menu" ? (
-            <MainMenu />
-          ) : (
-            <></>
-          )}
-          {screen == "Lost Pets" ? (
-            <LostPets />
-          ) : (
-            <></>
-          )}
-          {screen == "Map View" ? (
-            <MapView />
-          ) : (
-            <></>
-          )}
-        </div>
-        {/* </ListsContext.Provider> */}
-      </ScreenContext.Provider>
-    </div>
+      </div>
+    </UserContext.Provider>
   );
 }
