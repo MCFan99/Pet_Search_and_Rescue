@@ -17,6 +17,13 @@ export type User = {
 	name?: string,
 }
 
+export type Item = {
+  username?: User,
+  petName?: string,
+  petImage?: HTMLImageElement,
+  petSpecies?: string,
+}
+
 export default function Home() {
 	const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
