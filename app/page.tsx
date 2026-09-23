@@ -7,6 +7,8 @@ import SideBar from "@/components/SideBar/SideBar";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
 import { LostPets } from "@/components/LostPets/LostPets";
 import { MapView } from "@/components/MapView/MapView";
+import { Alerts } from "@/components/Alerts/Alerts";
+import { PetInfo } from "@/components/PetInfo/PetInfo";
 import { Login } from "@/components/Login/Login"
 import { SaveUserData } from "@/lib/firebase/database/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -97,6 +99,16 @@ export default function Home() {
               )}
               {screen == "Map View" ? (
                 <MapView />
+              ) : (
+                <></>
+              )}
+              {screen == "Alerts" ? (
+                <Alerts />
+              ) : (
+                <></>
+              )}
+              {screen == "Pet Info" ? (
+                <PetInfo />
               ) : (
                 <></>
               )}
