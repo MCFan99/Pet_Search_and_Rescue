@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Landkarte</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<link rel="icon" href="icon.png" sizes="64x64" />
+<script src="maplibregl/maplibre-gl.js"></script>
+<link href="maplibregl/maplibre-gl.css" rel="stylesheet" />
+<link href="style.css" rel="stylesheet" />
+</head>
+<body>
+<div id="map"></div>
+<script>
+    let locale_en = {
+        "name": "en",
+        "qwantStyleName": "Map",
+        "qwantStyleURI": "qwant-style/built-style-en.json",
+        "maptilerHybridStyleName": "Satellite",
+        "mapLocale": {},
+        "cooperativeGestures": {},
+    }
+    let locale_de = {
+        "name": "de",
+        "qwantStyleName": "Karte",
+        "qwantStyleURI": "qwant-style/built-style-de.json",
+        "maptilerHybridStyleName": "Satellit",
+        "mapLocale": {
+            'FullscreenControl.Enter': 'Vollbild',
+            'FullscreenControl.Exit': 'Vollbildmodus beenden',
+            'NavigationControl.ResetBearing': 'Drehung zurücksetzen',
+            'NavigationControl.ZoomIn': 'Vergrößern',
+            'NavigationControl.ZoomOut': 'Verkleinern',
+        },
+        "cooperativeGestures": {
+            windowsHelpText: "Verwende Strg+Scrollen zum Zoomen der Karte",
+            macHelpText: "Verwende ⌘+Scrollen zum Zoomen der Karte",
+            mobileHelpText: "Verschieben der Karte mir zwei Fingern",
+        },
+    }
+
+    /*   ---------- CONFIGURATION ----------   */
+    accessToken = "get_your_own_OpIi9ZULNHzrESv6T2vL" //get your key from https://cloud.maptiler.com/account/keys/
+    locale = locale_en //locale_en and locale_de are currently supported
+    mapCenter = [8.40414,49.01376]
+    mapZoom = 16
+    mapPitch = 45      //set to 0 if not needed
+    mapBearing = -17.6 //set to 0 if not needed
+    cooperativeGestures = true //prevent inadvertent scrolling/panning when navigating a page where map is embedded inline
+    markerColor = "#e68600"
+    popupHTML = `<h2>Schloss Karlsruhe</h2>
+                 <a href="https://de.wikipedia.org/wiki/Schloss_Karlsruhe" target="_blank">Wikipedia Artikel</a>`
+    /*   -----------------------------------   */
+
+    /* Create the map */
+    var map = new maplibregl.Map({
+        center: mapCenter,
+        zoom: mapZoom,
+        pitch: mapPitch,
+        bearing: mapBearing,
+        container: 'map',
+        antialias: true,
+        cooperativeGestures: cooperativeGestures ? locale.cooperativeGestures : undefined,
+        locale: locale.mapLocale
+    })
+
+    /* Setup the styles */
+    const mapTilerLogo = {'src': 'https://api.maptiler.com/resources/logo.svg', 'href': 'https://maptiler.com/'}
+    var mapStyles = [{'name': locale.qwantStyleName, 'data': undefined, 'initAndSet': initAndSetQwantStyle, 'logo': mapTilerLogo},
+                     {'name': locale.maptilerHybridStyleName, 'data': 'https://api.maptiler.com/maps/hybrid/style.json?key=' + accessToken, 'logo': mapTilerLogo}]
+    var nextMapStyleIndex = 0
+
+    map.on('styledata', (e) => { if (e.style.stylesheet.id == "hybrid") localizeMaptilerHybridStyle() })
+
+    logoImg = document.createElement("img")
+    logo = document.createElement("a")
+    logo.id = "logo"
+    logo.rel = "noopener nofollow"
+    logo.target = "_blank"
+    logo.appendChild(logoImg)
+    logo.classList.add("maplibregl-ctrl")
+    document.getElementsByClassName("maplibregl-ctrl-bottom-left")[0].appendChild(logo)
+
+    mapStyle = document.createElement("button")
+    mapStyle.id = "mapStyle"
+    mapStyle.type = "button"
+    mapStyle.addEventListener("click", switchMapStyle)
+    switchMapStyle() // initializes button text and first style
+    mapStyleDiv = document.createElement("div")
+    mapStyleDiv.appendChild(mapStyle)
+    mapStyleDiv.classList.add("maplibregl-ctrl", "maplibregl-ctrl-group")
+    document.getElementsByClassName("maplibregl-ctrl-top-left")[0].appendChild(mapStyleDiv)
+
+    /* Setup controls and popup */
+    for (className of ["maplibregl-compact-show", "mapboxgl-compact-show"]) {
+        for (node of document.getElementsByClassName(className)) {
+            node.classList.remove(className) //initially hide attributions in mobile view
+        }
+    }
+
+    const nav = new maplibregl.NavigationControl({visualizePitch: true})
+    map.addControl(nav, 'bottom-right')
+
+    map.addControl(new maplibregl.FullscreenControl())
+
+    const popup = new maplibregl.Popup({ offset: 25, closeOnClick: false })
+        .setHTML(popupHTML)
+        .setLngLat(mapCenter)
+    const marker = new maplibregl.Marker({color: markerColor})
+        .setLngLat(mapCenter)
+        .setPopup(popup)
+        .addTo(map)
+    marker.togglePopup()
+
+
+    function switchMapStyle() {
+        if (mapStyles[nextMapStyleIndex].data == undefined) {
+            mapStyles[nextMapStyleIndex].initAndSet(nextMapStyleIndex)
+        } else {
+            map.setStyle(mapStyles[nextMapStyleIndex].data, false)
+        }
+        if (mapStyles[nextMapStyleIndex].logo == undefined) {
+            logoImg.src = ""
+            logo.href = ""
+        } else {
+            logoImg.src = mapStyles[nextMapStyleIndex].logo.src
+            logo.href = mapStyles[nextMapStyleIndex].logo.href
+        }
+        nextMapStyleIndex = (nextMapStyleIndex + 1) % mapStyles.length
+        mapStyle.innerText = mapStyles[nextMapStyleIndex].name
+        mapStyle.setAttribute("aria-label", mapStyles[nextMapStyleIndex].name)
+    }
+
+    /* qwantStyle gets loaded from local file, then customized
+     * and after that it is set as the current style of the map */
+    function initAndSetQwantStyle(index) {
+        fetch(locale.qwantStyleURI).then((response) => response.json()).then((json) => {
+            /* use maptiler for tiles */
+            json.sprite = window.location.href + "/../qwant-style/sprite"
+            json.glyphs = "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=" + accessToken
+            json.sources.basemap.tiles[0] = "https://api.maptiler.com/tiles/v3/{z}/{x}/{y}.pbf?key=" + accessToken
+            json.sources.poi.tiles[0] = "https://api.maptiler.com/tiles/v3/{z}/{x}/{y}.pbf?key=" + accessToken
+
+            /* add 3D building source */
+            // taken from https://github.com/openmaptiles/maptiler-3d-gl-style/blob/master/style.json
+            // respectively https://api.maptiler.com/maps/streets/style.json?key=...
+            json.sources.openmaptiles = {"url":"https://api.maptiler.com/tiles/v3/tiles.json?key=" + accessToken,"type":"vector"}
+            json.layers.push({
+                "id": "building-3d",
+                "type": "fill-extrusion",
+                "source": "openmaptiles",
+                "source-layer": "building",
+                "minzoom": 16,
+                "layout": {"visibility": "visible"},
+                "paint": {
+                    "fill-extrusion-base": {
+                    "type": "identity",
+                    "property": "render_min_height"
+                    },
+                    "fill-extrusion-color": "rgba(189, 185, 181, 1)",
+                    "fill-extrusion-height": {
+                    "type": "identity",
+                    "property": "render_height"
+                    },
+                    "fill-extrusion-opacity": 0.3
+                },
+                "metadata": {},
+                "filter": ["all",["!has","hide_3d"]]
+            })
+
+            /* fix attributions */
+            // Using maptiler API requires "© MapTiler" attribution and icon with links
+            json.sources.openmaptiles.attribution=""
+            json.sources.poi.attribution=""
+            json.sources.basemap.attribution=`
+                <a href=\"https://github.com/Qwant/qwant-basic-gl-style/blob/master/LICENSE.md#design-license-cc-by-40\" target=\"_blank\">&copy; Qwant</a>
+                <a href=\"https://openmaptiles.org/\" target=\"_blank\">&copy; OpenMapTiles</a>
+                <a href=\"https://www.maptiler.com/copyright/\" target=\"_blank\">&copy; MapTiler</a>
+                <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap</a>`
+
+            /* save style and set it as current map style */
+            mapStyles[index].data = json
+            map.setStyle(mapStyles[index].data, false)
+        })
+    }
+
+    /* maptilerHybridStyle is added to the map on demand.
+     * Every time it is loaded as the current style for the map,
+     * this function in invoked and the locale gets changed here. */
+    function localizeMaptilerHybridStyle() {
+        //layers that contain a value with "name" in it => have to be adapted to the locale
+        for (layerId of ["state_label", "country_label"]) {
+            map.setLayoutProperty(layerId, 'text-field', ["case",["has","name:"+locale.name],["get","name:"+locale.name],["get","name:latin"]])
+        }
+        map.setLayoutProperty("road_label", 'text-field',
+            ["concat",
+                ["case",["has","name:"+locale.name],["get","name:"+locale.name],["get","name:latin"]],
+                " ",
+                ["get","name:nonlatin"]])
+        map.setLayoutProperty("place_label", 'text-field',
+            ["concat",
+                ["case",["has","name:"+locale.name],["get","name:"+locale.name],["get","name:latin"]],
+                "\n",
+                ["get","name:nonlatin"]])
+    }
+</script>
+
+</body>
+</html>
