@@ -1,0 +1,15 @@
+.alerts_container {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-rows: 1fr 1fr;
+    gap: 25px;
+    background-color: var(--tertiary);
+    padding: 25px;
+    border-radius: 25px;
+    justify-content: space-evenly;      
+    min-height: 100%;    
+    overflow: hidden;
+    flex: 1;
+    overflow-y: scroll;
+}

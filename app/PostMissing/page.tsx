@@ -88,7 +88,7 @@ export default function PostMissing() {
                             onClick={() => { setImagePreview(""); setImageFile(null); }}
                             title="Click to remove or change photo"
                             >
-                            <span className={style.remove_overlay_text}>Remove Photo</span>
+                                <span className={style.remove_overlay_text}>Remove Photo</span>
                             </button>
                         )}
                     </div>

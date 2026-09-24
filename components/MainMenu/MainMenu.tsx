@@ -4,7 +4,7 @@ import Icon from "../Icon";
 import Image from "next/image";
 import { useState, useEffect, useContext } from "react";
 import { ScreenContext } from "@/app/contexts";
-import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 import { redirect } from "next/navigation";
 
 interface PetPost {
@@ -12,7 +12,6 @@ interface PetPost {
     petName: string;
     petSpecies: string;
     petImage?: string;
-    authorName: string;
 }
 
 export function MainMenu(){
@@ -125,7 +124,7 @@ export function MainMenu(){
                                 {/* Info Button updates your app frame view to show all data */}
                                 <button 
                                     className={`${style.poster_info_btn} concert_one_regular`}
-                                    onClick={() => setScreen("Lost Pets")}
+                                    onClick={() => setScreen("Pet Info")}
                                 >
                                     Info
                                 </button>

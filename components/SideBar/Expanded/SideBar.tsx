@@ -21,6 +21,7 @@ export default function SideBarExpanded() {
                 <Redirect iconName="🏠" label="Main Menu" />
                 <Redirect iconName="📍" label="Map View" />
                 <Redirect iconName="🔎" label="Lost Pets" />
+                <Redirect iconName="📄" label="Alerts" />
             </div>
         </div>
     )
