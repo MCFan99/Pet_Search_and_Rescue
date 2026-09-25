@@ -1,10 +1,8 @@
-'use client'
-import { useContext } from "react";
-import styles from "./SideBar.module.css"
-import Image from "next/image"
-import Icon from "@/components/Icon";
-import Redirect from "./Redirect";
-import { ScreenContext } from "@/app/contexts";
+import { useState, createContext } from "react";
+import SideBarExpanded from "./Expanded/SideBar";
+import SideBarCollapsed from "./Collapsed/SideBar"
+
+export const CollaspedContext = createContext<[boolean, (value: boolean) => void]>([false, () => { }])
 
 export default function SideBar() {
     const [, setScreen] = useContext(ScreenContext)
@@ -14,8 +12,7 @@ export default function SideBar() {
             <div className={styles.side_bar_redirect_list}>
                 <Redirect iconName="🏠 Home" label="Main Menu" />
                 <Redirect iconName="📍 Pin" label="Map View" />
-                <Redirect iconName="🔎 Missing" label="Lost Pets" disableHover />
-                <Redirect iconName="⚙ Settings" label="Settings" disableHover />
+                <Redirect iconName="🔎 Missing" label="Lost Pets" />
             </div>
         </div>
     )
