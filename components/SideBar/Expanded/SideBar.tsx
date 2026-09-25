@@ -15,7 +15,7 @@ export default function SideBarExpanded() {
                 <button title="Side bar collapse" type="button" className={styles.side_bar_title_icon_wrapper} onClick={() => setCollapsed(true)}>
                     <Image className={styles.side_bar_title_icon} src={temp} alt="Pet Search and Rescue icons" />
                 </button>
-                <h1 className={`concert_one_regular ${styles.side_bar_title_text}`}>Pet Search and Rescue</h1>
+                <h1 className={`concert_one_regular ${styles.side_bar_title_text}`}>Pet Search <br /> and <br /> Rescue</h1>
             </div>
             <div className={styles.side_bar_redirect_list}>
                 <Redirect iconName="🏠" label="Main Menu" />
