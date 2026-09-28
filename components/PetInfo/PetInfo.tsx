@@ -67,7 +67,7 @@ export function PetInfo() {
                     <div className={style.pet_last_seen}></div>
                     <div className={style.pet_species}></div>
                     <button className={style.remove_post}
-                        onClick={() => handleDeletePost(post.id)}
+                        onClick={() => {handleDeletePost(post.id); setScreen("Lost Pets")}}
                         style={{ backgroundColor: '#ff4d4d', color: 'white' }}
                     >
                         Delete

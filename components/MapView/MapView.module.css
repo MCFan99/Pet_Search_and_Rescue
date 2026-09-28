@@ -44,14 +44,29 @@
 .mapview_map {
     grid-column: 1 / 4;
     grid-row: 1 / 3;
-    display: flex;
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
     background-color: var(--foreground);
     border-radius: 50px;
-    padding: 10px;
-    font-size: 350px;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
+}
+
+.mapview_canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.mapview_error {
+    position: absolute;
+    z-index: 1000;
+    top: 12px;
+    left: 50%;
+    max-width: calc(100% - 24px);
+    padding: 8px 12px;
+    transform: translateX(-50%);
+    border-radius: 4px;
+    background: #fff;
+    color: #7f1d1d;
+    font: 14px/1.4 sans-serif;
 }
 
