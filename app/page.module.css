@@ -1,5 +1,5 @@
 .page {
-	background-color: var(--foreground);
+	background-color: var(--background);
 	display: flex;
 	height: 100dvh;
 	width: 100dvw;
@@ -9,7 +9,7 @@
 .main {
 	height: 100%;
 	width: 100%;
-	background-color: var(--foreground);
+	background-color: var(--background);
 	color: var(--text);
 	display: grid;
 	grid-template-columns: 1fr;

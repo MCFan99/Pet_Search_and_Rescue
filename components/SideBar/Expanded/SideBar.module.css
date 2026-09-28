@@ -19,8 +19,9 @@
 }
 
 .side_bar_title_text {
-    font-size: 32px;
+    font-size: 26px;
     color: var(--text);
+    text-align: center;
     /* font-family: "Concert One", sans-serif; */
 }
 
@@ -32,8 +33,8 @@
 }
 
 .side_bar_title_icon {
-    height: 85px;
-    width: 85px;
+    height: 75px;
+    width: 75px;
     transition: 250ms;
 }
 

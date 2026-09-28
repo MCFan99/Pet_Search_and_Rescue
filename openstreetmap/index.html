@@ -28,11 +28,12 @@
  crossorigin=""></script>
 
  <script>
-    var map = L.map('map').setView([39.8283, -98.5795], 5);
-     var usgsTopo = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 16,
-        attribution: 'Tiles courtesy of the <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">USGS National Map</a>'
+     var map = L.map('map').setView([51.505, -0.09], 13);
+     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
      }).addTo(map);
+     osm.addTo(map);
      map.locate({ setView: true, maxZoom: 16 });
      function onLocationFound(e) {
         const radius = e.accuracy / 2;
@@ -46,14 +47,14 @@
      function onLocationError(e) {
          alert(e.message);
          // Fallback: center on a default location (e.g., London) if blocked
-         map.setView([39.8283, -98.5795], 5);
+         map.setView([37.924338, -94.444181], 1);
      }
      map.on('locationfound', onLocationFound);
      map.on('locationerror', onLocationError);
 
-    var marker = L.marker([39.8283, -98.5795]).addTo(map);
+     var marker = L.marker([51.5, -0.09]).addTo(map);
 
-    var circle = L.circle([39.8283, -98.5795], {
+     var circle = L.circle([51.508, -0.11], {
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.5,
