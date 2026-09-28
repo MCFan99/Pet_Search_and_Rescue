@@ -54,6 +54,16 @@
     align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 10px;
 }
 
+.mapview_canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+}
+
+.mapview_error {
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+}
