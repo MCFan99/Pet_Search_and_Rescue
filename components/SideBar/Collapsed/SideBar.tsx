@@ -31,6 +31,7 @@ export default function SideBarCollapsed() {
                 <Redirect iconName="📍" label="Map View" />
                 <Redirect iconName="🔎" label="Lost Pets" />
                 <Redirect iconName="📄" label="Alerts" />
+                <Redirect iconName="⚙️" label="Settings" />
             </div>
         </div>
     );
