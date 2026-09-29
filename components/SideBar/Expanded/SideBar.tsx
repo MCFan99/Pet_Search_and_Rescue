@@ -18,7 +18,7 @@ export default function SideBarExpanded() {
                 >
                     <Image
                         className={styles.side_bar_title_icon}
-                        src="/logo2.png"
+                        src="/logotuah.png"
                         alt="Pet Search and Rescue"
                         width={100}
                         height={100}
