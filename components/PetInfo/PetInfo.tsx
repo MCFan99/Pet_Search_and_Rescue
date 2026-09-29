@@ -1,5 +1,4 @@
 import style from "./PetInfo.module.css"
-import Image from "next/image"
 import { useState, useEffect, useContext } from "react";
 import { ScreenContext } from "@/app/contexts";
 import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";

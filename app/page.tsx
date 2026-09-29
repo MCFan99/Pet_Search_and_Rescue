@@ -1,6 +1,5 @@
 'use client'
 import styles from "./page.module.css";
-import Image from "next/image";
 import { useEffect, useState, createContext, useRef } from "react";
 import PostMissing from "./PostMissing/page";
 import SideBar from "@/components/SideBar/SideBar";
@@ -18,6 +17,7 @@ import { ScreenContext, UserContext } from "./contexts";
 export type User = {
 	uid: string,
 	name?: string,
+  email?: string,
 }
 
 export type Item = {
@@ -40,7 +40,8 @@ export default function Home() {
       if (firebaseUser) {
         setUser({
           uid: firebaseUser.uid,
-          name: firebaseUser.displayName || undefined
+          name: firebaseUser.displayName || undefined,
+          email: firebaseUser.email || undefined,
         });
       } else {
         setUser(null);

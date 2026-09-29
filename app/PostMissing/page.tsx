@@ -1,19 +1,24 @@
 'use client'
+import React from "react"
 import style from "./page.module.css";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useContext, ChangeEvent } from "react";
 import { UserContext } from "../contexts";
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, addDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { GetApp } from "@/lib/firebase/firebase";
+import "leaflet/dist/leaflet.css";
 
 export default function PostMissing() {
     const router = useRouter();
-    const [user] = useContext(UserContext);
+    const [general] = useContext(UserContext);
     const [petName, setPetName] = useState("");
     const [species, setSpecies] = useState("");
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
+    const mapContainerRef = React.useRef<HTMLDivElement>(null);
+    const [tilesRejected, setTilesRejected] = React.useState(false);
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -31,27 +36,37 @@ export default function PostMissing() {
 
         setLoading(true);
         try {
-            const db = getFirestore();
+            const auth = getAuth();
+            const db = getFirestore(GetApp());
+            const user = auth.currentUser;
             let petImageUrl = "";
 
             if (imageFile) {
-                const storage = getStorage();
-                const storageRef = ref(storage, `pet_images/${user?.uid}/${Date.now()}_${imageFile.name}`);
-                const snapshot = await uploadBytes(storageRef, imageFile);
-                petImageUrl = await getDownloadURL(snapshot.ref);
+                petImageUrl = await new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        if (typeof reader.result === "string") resolve(reader.result);
+                        else reject(new Error("Could not read image"));
+                    };
+                    reader.onerror = () => reject(reader.error);
+                    reader.readAsDataURL(imageFile);
+                });
             }
             
-            await addDoc(collection(db, "posts"), {
+            const docRef = await addDoc(collection(db, "posts"), {
                 petName: petName,
                 petSpecies: species,
                 petImage: petImageUrl,
                 authorId: user?.uid,
-                authorName: user?.name || "User",
-                createdAt: serverTimestamp()
+                authorName: general?.name || "User",
+                authorEmail: user?.email || "",
             });
+            await updateDoc(docRef, {
+                createdAt: serverTimestamp()
+            })
 
-            alert("Pet posted successfully!");
-            router.push('/'); 
+            console.log("Document written with ID: ", docRef.id);
+            router.push('/');
         } catch (error) {
             console.error("Error creating post: ", error);
             alert("Failed to submit post. Please try again.");
@@ -59,6 +74,38 @@ export default function PostMissing() {
             setLoading(false);
         }
     };
+
+    React.useEffect(() => {
+        let map: import("leaflet").Map | undefined;
+        let cancelled = false;
+
+        async function initializeMap() {
+            const { default: L } = await import("leaflet");
+            if (cancelled || !mapContainerRef.current) return;
+
+            map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
+            const tiles = L.tileLayer(
+                "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+                {
+                    maxZoom: 16,
+                    attribution: 'Tiles courtesy of the <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">USGS National Map</a>',
+                }
+            );
+            tiles.on("tileerror", () => {
+                setTilesRejected(true);
+            });
+            tiles.addTo(map);
+        }
+
+        void initializeMap().catch(() => setTilesRejected(true));
+
+        return () => {
+            cancelled = true;
+            map?.remove();
+        };
+    }, []);
+
+    const mapError = tilesRejected ? "Map tiles could not be loaded. Check your connection or the tile provider status." : null;
 
     return (
         <div className={`${style.page} concert_one_regular`}>
@@ -101,12 +148,15 @@ export default function PostMissing() {
                             onChange={(e) => setPetName(e.target.value)} 
                         />
                     </div>
-                    <button className={`${style.page_return} concert_one_regular`} onClick={() => {redirect('/')}} disabled={loading}>
+                    <button className={`${style.page_return} concert_one_regular`} onClick={() => router.push('/')} disabled={loading}>
                         <p>Cancel Post</p>
                     </button>
                     <div className={`${style.page_add_location} concert_one_regular`}>
                         <h2>Last seen:</h2>
-                        <input id="avatar" type="file" name="avatar" accept="image/png, image/jpeg" />
+                        <div className={style.add_location_map}>
+                            <div ref={mapContainerRef} className={style.add_location_canvas} />
+                            {mapError && <p className={style.add_location_error} role="alert">{mapError}</p>}
+                        </div>
                     </div>
                     <div className={`${style.page_species} concert_one_regular`}>
                         <p>Species:</p>
@@ -117,7 +167,12 @@ export default function PostMissing() {
                             onChange={(e) => setSpecies(e.target.value)} 
                         />
                     </div>
-                    <button className={`${style.page_post} concert_one_regular`} onClick={() => {redirect('/')}} disabled={loading}>
+                    <button
+                        type="button"
+                        className={`${style.page_post} concert_one_regular`}
+                        onClick={handlePostSubmit}
+                        disabled={loading}
+                    >
                         <p>{loading ? "Posting..." : "Post"}</p>
                     </button>
                 </div>

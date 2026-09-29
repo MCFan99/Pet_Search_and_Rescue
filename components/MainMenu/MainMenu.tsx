@@ -53,7 +53,10 @@ export function MainMenu(){
             await addDoc(collection(db, "posts"), {
                 petName: randomName,
                 petSpecies: randomSpecies,
+                petImage: "/no-image-available.png",
+                authorId: "",
                 authorName: "Tester App",
+                authorEmail: "test@psar.com",
                 createdAt: serverTimestamp()
                 // Leaving petImage blank so it triggers the placeholder asset
             });

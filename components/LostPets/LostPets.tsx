@@ -1,9 +1,8 @@
 'use client'
 import style from "./LostPets.module.css"
-import { redirect } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { ScreenContext } from "@/app/contexts";
-import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc, Timestamp } from "firebase/firestore";
 import Image from "next/image";
 
 interface PetPost {
@@ -11,6 +10,10 @@ interface PetPost {
     petName: string;
     petSpecies: string;
     petImage?: string;
+    authorId: string;
+    authorName: string;
+    authorEmail?: string;
+    createdAt: Timestamp;
 }
 
 export function LostPets(){
@@ -66,7 +69,9 @@ export function LostPets(){
                                         <div className={style.poster_placeholder_img}>No Image</div>
                                     )}
                                 </div>
-                                <h3 className={style.poster_pet_name}>{post.petName}</h3>
+                                <h3 className={style.poster_pet_name}>Name: {post.petName}</h3>
+                                <h3 className={style.poster_user_id}>Date Posted: {post.createdAt.toDate().toLocaleString()}</h3>
+                                <h3 className={style.poster_species}>Species: {post.petSpecies}</h3>
                                 
                                 {/* Info Button updates your app frame view to show all data */}
                                 <button 

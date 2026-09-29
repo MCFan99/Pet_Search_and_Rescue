@@ -1,5 +1,5 @@
 .lostpets_container {
-    display: grid;
+    display: flex;
     height: 100%;
     width: 100%;
     grid-template-rows: 1fr 1fr;
@@ -11,46 +11,90 @@
     justify-content: space-evenly;
 }
 
-/* .lostpets_post_missing {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    display: flex;
-    background-color: var(--foreground);
-    border-radius: 25px;
-    padding: 10px;
-    font-size: 22px;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
-    color: var(--text);
-} */
-
-.lostpets_posters {
-    grid-column: 1 / 4;
-    grid-row: 1 / 3;
-    display: flex;
-    background-color: var(--foreground);
-    border-radius: 25px;
-    padding: 10px;
-    font-size: 85px;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
+.posters_scroll_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 240px;
+    gap: 25px;
+    width: 100%;
+    padding: 15px 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    flex: 1;
+    overflow-y: scroll;
 }
 
-/* .lostpets_map {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-    display: flex;
-    background-color: var(--foreground);
+.poster_card {
+    background-color: var(--tertiary);
     border-radius: 25px;
-    padding: 10px;
-    font-size: 40px;
-    align-items: center;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
+    align-items: center;
+}
+
+.poster_image_wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 18px;
+    overflow: hidden;
+    background-color: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.poster_pet_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.poster_placeholder_img {
+    font-size: 14px;
+    color: gray;
+}
+
+.poster_pet_name {
+    font-size: 28px;
+    text-align: center;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.poster_user_id {
+    font-size: 28px;
+    text-align: center;
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.poster_species {
+    font-size: 28px;
+    text-align: center;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+
+.poster_info_btn {
+    background-color: var(--foreground);
+    border: none;
+    border-radius: 10px;
+    padding: 5px 15px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: auto;
     color: var(--text);
-} */
+    transition: transform 0.1s ease;
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+}
+
+.poster_info_btn:hover {
+    transform: scale(1.05);
+}

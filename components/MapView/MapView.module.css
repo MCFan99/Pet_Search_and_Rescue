@@ -1,9 +1,7 @@
 .mapview_container {
-    display: grid;
+    display: flex;
     height: 100%;
     width: 100%;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
     gap: 25px;
     background-color: var(--tertiary);
     padding: 25px;
@@ -42,8 +40,8 @@
 } */
 
 .mapview_map {
-    grid-column: 1 / 4;
-    grid-row: 1 / 3;
+    width: 100%;
+    height: 100%;
     position: relative;
     min-height: 0;
     overflow: hidden;
