@@ -77,11 +77,15 @@
     font-size: 40px;
 }
 
+.side_bar_redirect_no_hover:hover>span {
+    font-size: 45px;
+}
+
 .side_bar_redirect>span {
     font-size: 32px;
     transition: 250ms;
 }
 
 .side_bar_redirect_highlighted {
-    background-color: #0841dc;
+    background-color: var(--highlight);
 }
