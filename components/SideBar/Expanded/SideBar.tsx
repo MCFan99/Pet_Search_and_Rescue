@@ -31,11 +31,11 @@ export default function SideBarExpanded() {
             </div>
 
             <div className={styles.side_bar_redirect_list}>
-                <Redirect iconName="🏠" label="Main Menu" />
-                <Redirect iconName="📍" label="Map View" />
-                <Redirect iconName="🔎" label="Lost Pets" />
-                <Redirect iconName="📄" label="Alerts" />
-                <Redirect iconName="⚙️" label="Settings" />
+                <Redirect iconName="" label="Main Menu" />
+                <Redirect iconName="" label="Map View" />
+                <Redirect iconName="" label="Lost Pets" />
+                <Redirect iconName="" label="Alerts" />
+                <Redirect iconName="" label="Settings" />
             </div>
         </div>
     );
