@@ -2,7 +2,7 @@
 import style from "./LostPets.module.css"
 import { useState, useEffect, useContext } from "react";
 import { ScreenContext } from "@/app/contexts";
-import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 import Image from "next/image";
 
 interface PetPost {

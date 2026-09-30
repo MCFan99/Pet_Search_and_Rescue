@@ -1,6 +1,6 @@
 import style from "./PetInfo.module.css"
 import { useState, useEffect, useContext } from "react";
-import { ScreenContext } from "@/app/contexts";
+import { ScreenContext, UserContext } from "@/app/contexts";
 import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 
 {/*
@@ -14,11 +14,14 @@ interface PetInformation {
     petName: string;
     petSpecies: string;
     petImage?: string;
+    authorId: string;
     authorName: string;
+    authorEmail?: string;
 }
 
 export function PetInfo() {
     const [screen, setScreen] = useContext(ScreenContext);
+    const [user] = useContext(UserContext);
     const [posts, setPosts] = useState<PetInformation[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -65,12 +68,14 @@ export function PetInfo() {
                     </button>
                     <div className={style.pet_last_seen}></div>
                     <div className={style.pet_species}></div>
-                    <button className={style.remove_post}
-                        onClick={() => {handleDeletePost(post.id); setScreen("Lost Pets")}}
-                        style={{ backgroundColor: '#ff4d4d', color: 'white' }}
-                    >
-                        Delete
-                    </button>
+                    {(!post.authorId || post.authorId === user?.uid) && (
+                        <button className={style.remove_post}
+                            onClick={() => {handleDeletePost(post.id); setScreen("Lost Pets")}}
+                            style={{ backgroundColor: '#ff4d4d', color: 'white' }}
+                        >
+                            Delete
+                        </button>
+                    )}
                 </div>
             ))}
         </div>

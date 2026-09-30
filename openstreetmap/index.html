@@ -35,6 +35,10 @@
      }).addTo(map);
      osm.addTo(map);
      map.locate({ setView: true, maxZoom: 16 });
+
+     map.on("click", function(e){
+        var marker = new L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+     })
      function onLocationFound(e) {
         const radius = e.accuracy / 2;
         // Place a marker on the user's location
@@ -51,12 +55,6 @@
      }
      map.on('locationfound', onLocationFound);
      map.on('locationerror', onLocationError);
-
-     map.on("click", function(e){
-        var marker = new L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
-     })
-
-     var marker = L.marker([51.5, -0.09]).addTo(map);
 
      var circle = L.circle([51.508, -0.11], {
         color: 'red',

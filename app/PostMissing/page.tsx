@@ -17,8 +17,56 @@ export default function PostMissing() {
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
+    const [lastSeenLocation, setLastSeenLocation] = useState<{ latitude: number; longitude: number } | null>(null);
     const mapContainerRef = React.useRef<HTMLDivElement>(null);
     const [tilesRejected, setTilesRejected] = React.useState(false);
+
+    React.useEffect(() => {
+        let map: import("leaflet").Map | undefined;
+        let marker: import("leaflet").CircleMarker | undefined;
+        let cancelled = false;
+
+        async function initializeMap() {
+            const { default: L } = await import("leaflet");
+            if (cancelled || !mapContainerRef.current) return;
+
+            map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
+            map.on("click", ({ latlng }) => {
+                setLastSeenLocation({ latitude: latlng.lat, longitude: latlng.lng });
+                if (marker) {
+                    marker.setLatLng(latlng);
+                } else {
+                    marker = L.circleMarker(latlng, {
+                        radius: 8,
+                        color: "#ffffff",
+                        weight: 2,
+                        fillColor: "#d1495b",
+                        fillOpacity: 1,
+                    }).addTo(map!);
+                }
+            });
+            const tiles = L.tileLayer(
+                "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+                {
+                    maxZoom: 16,
+                    attribution: 'Tiles courtesy of the <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">USGS National Map</a>',
+                }
+            );
+            tiles.on("tileerror", () => {
+                setTilesRejected(true);
+            });
+            tiles.addTo(map);
+        }
+
+        void initializeMap().catch(() => setTilesRejected(true));
+
+        return () => {
+            cancelled = true;
+            map?.remove();
+        };
+    }, []);
+
+    const mapError = tilesRejected ? "Map tiles could not be loaded. Check your connection or the tile provider status." : null;
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -60,6 +108,7 @@ export default function PostMissing() {
                 authorId: user?.uid,
                 authorName: general?.name || "User",
                 authorEmail: user?.email || "",
+                lastSeenLocation: lastSeenLocation,
             });
             await updateDoc(docRef, {
                 createdAt: serverTimestamp()
@@ -74,38 +123,6 @@ export default function PostMissing() {
             setLoading(false);
         }
     };
-
-    React.useEffect(() => {
-        let map: import("leaflet").Map | undefined;
-        let cancelled = false;
-
-        async function initializeMap() {
-            const { default: L } = await import("leaflet");
-            if (cancelled || !mapContainerRef.current) return;
-
-            map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
-            const tiles = L.tileLayer(
-                "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
-                {
-                    maxZoom: 16,
-                    attribution: 'Tiles courtesy of the <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">USGS National Map</a>',
-                }
-            );
-            tiles.on("tileerror", () => {
-                setTilesRejected(true);
-            });
-            tiles.addTo(map);
-        }
-
-        void initializeMap().catch(() => setTilesRejected(true));
-
-        return () => {
-            cancelled = true;
-            map?.remove();
-        };
-    }, []);
-
-    const mapError = tilesRejected ? "Map tiles could not be loaded. Check your connection or the tile provider status." : null;
 
     return (
         <div className={`${style.page} concert_one_regular`}>

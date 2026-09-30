@@ -3,19 +3,25 @@ import style from "./MainMenu.module.css"
 import Icon from "../Icon";
 import Image from "next/image";
 import { useState, useEffect, useContext } from "react";
-import { ScreenContext } from "@/app/contexts";
-import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
+import { ScreenContext, UserContext } from "@/app/contexts";
+import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { redirect } from "next/navigation";
+import { getAuth } from "firebase/auth";
 
 interface PetPost {
     id: string;
     petName: string;
     petSpecies: string;
     petImage?: string;
+    authorId: string;
+    authorName: string;
+    authorEmail?: string;
+    createdAt: Timestamp;
 }
 
 export function MainMenu(){
     const [screen, setScreen] = useContext(ScreenContext);
+    const [user] = useContext(UserContext);
     const [posts, setPosts] = useState<PetPost[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -132,13 +138,15 @@ export function MainMenu(){
                                     Info
                                 </button>
                                 {/* CHANGED: Temporary Delete Button */}
-                                <button 
-                                    className={`${style.poster_info_btn} concert_one_regular`}
-                                    onClick={() => handleDeletePost(post.id)}
-                                    style={{ backgroundColor: '#ff4d4d', color: 'white' }}
-                                >
-                                    Delete
-                                </button>
+                                {(!post.authorId || post.authorId === user?.uid) && (
+                                    <button 
+                                        className={`${style.poster_info_btn} concert_one_regular`}
+                                        onClick={() => handleDeletePost(post.id)}
+                                        style={{ backgroundColor: '#ff4d4d', color: 'white' }}
+                                    >
+                                        Delete
+                                    </button>
+                                )}
                             </div>
                         ))}
                     </div>
