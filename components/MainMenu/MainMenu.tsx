@@ -3,7 +3,7 @@ import style from "./MainMenu.module.css"
 import Icon from "../Icon";
 import Image from "next/image";
 import { useState, useEffect, useContext } from "react";
-import { ScreenContext, UserContext } from "@/app/contexts";
+import { ScreenContext, SelectedPetContext, UserContext } from "@/app/contexts";
 import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { redirect } from "next/navigation";
 import { getAuth } from "firebase/auth";
@@ -21,6 +21,7 @@ interface PetPost {
 
 export function MainMenu(){
     const [screen, setScreen] = useContext(ScreenContext);
+    const [, setSelectedPet] = useContext(SelectedPetContext);
     const [user] = useContext(UserContext);
     const [posts, setPosts] = useState<PetPost[]>([]);
     const [loading, setLoading] = useState(true);
@@ -133,7 +134,7 @@ export function MainMenu(){
                                 {/* Info Button updates your app frame view to show all data */}
                                 <button 
                                     className={`${style.poster_info_btn} concert_one_regular`}
-                                    onClick={() => setScreen("Pet Info")}
+                                    onClick={() => { setSelectedPet(post); setScreen("Pet Info"); }}
                                 >
                                     Info
                                 </button>

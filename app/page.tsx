@@ -12,7 +12,7 @@ import { Settings } from "@/components/Settings/Settings";
 import { Login } from "@/components/Login/Login"
 import { SaveUserData } from "@/lib/firebase/database/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ScreenContext, UserContext } from "./contexts";
+import { ScreenContext, SelectedPetContext, UserContext, type PetInformation } from "./contexts";
 
 export type User = {
 	uid: string,
@@ -71,6 +71,7 @@ export default function Home() {
 	}
 
   const [screen, setScreen] = useState<string>("Main Menu")
+  const [selectedPet, setSelectedPet] = useState<PetInformation | null>(null);
   return (
     <UserContext.Provider value={[user, SetUser]}>
       <div className={`${styles.page} concert_one_regular`}>
@@ -78,6 +79,7 @@ export default function Home() {
           <Login />
         ) : (
           <ScreenContext.Provider value={[screen, setScreen]}>
+          <SelectedPetContext.Provider value={[selectedPet, setSelectedPet]}>
             {screen == "Post Missing" ? (
               <PostMissing />
             ) : (
@@ -122,6 +124,7 @@ export default function Home() {
               )}
             </div>
             {/* </ListsContext.Provider> */}
+          </SelectedPetContext.Provider>
           </ScreenContext.Provider>
         )}
       </div>

@@ -1,7 +1,7 @@
 import style from "./PetInfo.module.css"
-import { useState, useEffect, useContext } from "react";
-import { ScreenContext, UserContext } from "@/app/contexts";
-import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
+import { useContext } from "react";
+import { ScreenContext, SelectedPetContext, UserContext } from "@/app/contexts";
+import { getFirestore, deleteDoc, doc } from "firebase/firestore";
 
 {/*
     This will not be on the sidebar;
@@ -9,43 +9,10 @@ import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTim
     and opened by pressing the info button on a poster in the main menu
 */}
 
-interface PetInformation {
-    id: string;
-    petName: string;
-    petSpecies: string;
-    petImage?: string;
-    authorId: string;
-    authorName: string;
-    authorEmail?: string;
-}
-
 export function PetInfo() {
-    const [screen, setScreen] = useContext(ScreenContext);
+    const [, setScreen] = useContext(ScreenContext);
     const [user] = useContext(UserContext);
-    const [posts, setPosts] = useState<PetInformation[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const db = getFirestore();
-        
-        // REMOVED: limit(5) so that all posters are returned from the database
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const fetchedPosts = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })) as PetInformation[];
-            
-            setPosts(fetchedPosts);
-            setLoading(false);
-        }, (error) => {
-            console.error("Error listening to global posts:", error);
-            setLoading(false);
-        });
-
-        return () => unsubscribe();
-    }, []);
+    const [selectedPet] = useContext(SelectedPetContext);
 
     const handleDeletePost = async (postId: string) => {
         try {
@@ -58,26 +25,41 @@ export function PetInfo() {
 
     return (
         <div className={style.petinfo_container}>
-            {posts.map((post) => (
-                <div key={post.id} className={style.petinfo_full}>
-                    <div className={style.pet_image}></div>
-                    <div className={style.pet_name}></div>
-                    <div className={style.pet_owner}></div>
+            {selectedPet ? (
+                <div className={style.petinfo_full}>
+                    <div className={style.pet_image}>
+                        <img
+                            src={selectedPet.petImage || "/no-image-available.png"}
+                            alt={selectedPet.petName}
+                            style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                        />
+                    </div>
+                    <div className={style.pet_name}>Name: {selectedPet.petName}</div>
+                    <div className={style.pet_owner}>
+                        Reported by: {selectedPet.authorName}
+                        {selectedPet.authorEmail && <div>{selectedPet.authorEmail}</div>}
+                    </div>
                     <button className={`${style.return} concert_one_regular`} onClick={() => setScreen("Lost Pets")}>
                         <p>Return</p>
                     </button>
-                    <div className={style.pet_last_seen}></div>
-                    <div className={style.pet_species}></div>
-                    {(!post.authorId || post.authorId === user?.uid) && (
+                    <div className={style.pet_last_seen}>
+                        Last seen: {selectedPet.lastSeenLocation
+                            ? `${selectedPet.lastSeenLocation.latitude}, ${selectedPet.lastSeenLocation.longitude}`
+                            : "Not provided"}
+                    </div>
+                    <div className={style.pet_species}>Species: {selectedPet.petSpecies}</div>
+                    {(!selectedPet.authorId || selectedPet.authorId === user?.uid) && (
                         <button className={style.remove_post}
-                            onClick={() => {handleDeletePost(post.id); setScreen("Lost Pets")}}
+                            onClick={() => {handleDeletePost(selectedPet.id); setScreen("Lost Pets")}}
                             style={{ backgroundColor: '#ff4d4d', color: 'white' }}
                         >
                             Delete
                         </button>
                     )}
                 </div>
-            ))}
+            ) : (
+                <p>No pet selected.</p>
+            )}
         </div>
     )
 }

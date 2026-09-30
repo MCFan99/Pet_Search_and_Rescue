@@ -1,7 +1,7 @@
 'use client'
 import style from "./LostPets.module.css"
 import { useState, useEffect, useContext } from "react";
-import { ScreenContext } from "@/app/contexts";
+import { ScreenContext, SelectedPetContext } from "@/app/contexts";
 import { getFirestore, collection, query, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 import Image from "next/image";
 
@@ -19,6 +19,7 @@ interface PetPost {
 export function LostPets(){
     const [posts, setPosts] = useState<PetPost[]>([]);
      const [screen, setScreen] = useContext(ScreenContext);
+    const [, setSelectedPet] = useContext(SelectedPetContext);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const db = getFirestore();
@@ -76,7 +77,7 @@ export function LostPets(){
                                 {/* Info Button updates your app frame view to show all data */}
                                 <button 
                                     className={`${style.poster_info_btn} concert_one_regular`}
-                                    onClick={() => setScreen("Pet Info")}
+                                    onClick={() => { setSelectedPet(post); setScreen("Pet Info"); }}
                                 >
                                     Info
                                 </button>
