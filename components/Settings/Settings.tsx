@@ -6,13 +6,13 @@ export function Settings(){
     return (
         <div className={style.settings_container}>
              <button className={style.settings_default_mode} onClick={() => { document.documentElement.dataset.theme = "default" }}>
-                <h3 className="concert_one_regular">🔵 Default Mode</h3>
+                <h3 className="concert_one_regular"> Default Mode</h3>
             </button>
             <button className={style.settings_light_mode} onClick={() => { document.documentElement.dataset.theme = "light" }}>
-                <h3 className="concert_one_regular">⚪ Light Mode</h3>
+                <h3 className="concert_one_regular"> Light Mode</h3>
             </button>
             <button className={style.settings_dark_mode} onClick={() => { document.documentElement.dataset.theme = "dark" }}>
-                <h3 className="concert_one_regular">⚫ Dark Mode</h3>
+                <h3 className="concert_one_regular">Dark Mode</h3>
             </button>
             <div className={`${style.settings_posters} concert_one_regular`}>
                 <p>Background:</p>
