@@ -27,6 +27,28 @@ export function MapView(){
                 setTilesRejected(true);
             });
             tiles.addTo(map);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    ({ coords }) => {
+                        if (cancelled || !map) return;
+
+                        const userLocation: [number, number] = [coords.latitude, coords.longitude];
+                        map.setView(userLocation, 13);
+                        L.circleMarker(userLocation, {
+                            radius: 8,
+                            color: "#ffffff",
+                            weight: 2,
+                            fillColor: "#2878d0",
+                            fillOpacity: 1,
+                        }).addTo(map);
+                    },
+                    () => {
+                        // Keep the default map view if location access is denied or unavailable.
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+                );
+            }
         }
 
         void initializeMap().catch(() => setTilesRejected(true));
