@@ -34,7 +34,7 @@ export function PetInfo() {
                             style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
                         />
                     </div>
-                    <div className={style.pet_name}>Name: {selectedPet.petName}</div>
+                    <div className={style.pet_name}>Name: {selectedPet.petName} <br /> Species: {selectedPet.petSpecies}</div>
                     <div className={style.pet_owner}>
                         Reported by: {selectedPet.authorName}
                         {selectedPet.authorEmail && <div>{selectedPet.authorEmail}</div>}
@@ -47,7 +47,6 @@ export function PetInfo() {
                             ? `${selectedPet.lastSeenLocation.latitude}, ${selectedPet.lastSeenLocation.longitude}`
                             : "Not provided"}
                     </div>
-                    <div className={style.pet_species}>Species: {selectedPet.petSpecies}</div>
                     {(!selectedPet.authorId || selectedPet.authorId === user?.uid) && (
                         <button className={style.remove_post}
                             onClick={() => {handleDeletePost(selectedPet.id); setScreen("Lost Pets")}}
