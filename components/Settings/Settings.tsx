@@ -5,6 +5,7 @@ function updateCustomColor(variable: string, value: string) {
     const root = document.documentElement;
     root.dataset.theme = "custom";
     root.style.setProperty(variable, value);
+    
 }
 
 export function Settings(){

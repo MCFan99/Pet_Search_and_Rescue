@@ -23,6 +23,27 @@ export function PetInfo() {
         }
     };
 
+    if (!selectedPet) {
+        return (
+            <div className={style.petinfo_container}>
+                <p>No pet selected.</p>
+            </div>
+        );
+    }
+    let postAction;
+    if (!selectedPet.authorId || selectedPet.authorId === user?.uid) {
+        <button className={style.remove_post}
+            onClick={() => {handleDeletePost(selectedPet.id); setScreen("Lost Pets")}}
+            style={{ backgroundColor: '#ff4d4d', color: 'white' }}
+        >
+            Delete
+        </button>
+    } else {
+        <button className={style.remove_post}>
+            I found your pet!
+        </button>
+    }
+
     return (
         <div className={style.petinfo_container}>
             {selectedPet ? (
@@ -48,14 +69,7 @@ export function PetInfo() {
                             : "Not provided"}
                     </div>
                     <div className={style.pet_species}>Species: {selectedPet.petSpecies}</div>
-                    {(!selectedPet.authorId || selectedPet.authorId === user?.uid) && (
-                        <button className={style.remove_post}
-                            onClick={() => {handleDeletePost(selectedPet.id); setScreen("Lost Pets")}}
-                            style={{ backgroundColor: '#ff4d4d', color: 'white' }}
-                        >
-                            Delete
-                        </button>
-                    )}
+                    {postAction} 
                 </div>
             ) : (
                 <p>No pet selected.</p>
