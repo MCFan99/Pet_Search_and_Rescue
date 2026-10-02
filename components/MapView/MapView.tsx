@@ -1,11 +1,50 @@
 'use client'
 import React from "react"
 import style from "./MapView.module.css"
+import { useState, useEffect, useContext } from "react";
+import { getFirestore, collection, query, onSnapshot } from "firebase/firestore";
+import {  Timestamp } from "firebase/firestore";
 import "leaflet/dist/leaflet.css";
 
+interface PetPost {
+    id: string;
+    petName: string;
+    petSpecies: string;
+    petImage?: string;
+    authorId: string;
+    authorName: string;
+    authorEmail?: string;
+    lastSeenLocation: Location;
+    createdAt: Timestamp;
+}
+
+interface Location {
+    latitude: number;
+    longitude: number;
+}
+
 export function MapView(){
+    const [posts, setPosts] = useState<PetPost[]>([]);
+    const [mapInstance, setMapInstance] =
+    useState<import("leaflet").Map | null>(null);
     const mapContainerRef = React.useRef<HTMLDivElement>(null);
     const [tilesRejected, setTilesRejected] = React.useState(false);
+
+    useEffect(() => {
+        const db = getFirestore();
+        const q = query(collection(db, "posts"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const fetchedPosts = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })) as PetPost[];
+            setPosts(fetchedPosts);
+        }, (error) => {
+            console.error("Error listening to global posts:", error);
+        });
+        
+        return () => unsubscribe();
+    }, []);
 
     React.useEffect(() => {
         let map: import("leaflet").Map | undefined;
@@ -16,6 +55,7 @@ export function MapView(){
             if (cancelled || !mapContainerRef.current) return;
 
             map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
+            setMapInstance(map);
             const tiles = L.tileLayer(
                 "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
                 {
@@ -60,6 +100,49 @@ export function MapView(){
     }, []);
 
     const mapError = tilesRejected ? "Map tiles could not be loaded. Check your connection or the tile provider status." : null;
+
+    useEffect(() => {
+        if (!mapInstance) return;
+
+        let cancelled = false;
+        let markerLayer: import("leaflet").LayerGroup | undefined;
+
+        void import("leaflet").then(({ default: L }) => {
+            if (cancelled) return;
+
+            markerLayer = L.layerGroup().addTo(mapInstance);
+
+            for (const post of posts) {
+                const location = post.lastSeenLocation;
+                if (
+                    !location ||
+                    !Number.isFinite(location.latitude) ||
+                    !Number.isFinite(location.longitude)
+                ) {
+                    continue;
+                }
+
+                const popup = document.createElement("div");
+                const popupInfo = "Name: " + post.petName + ", Species: " + post.petSpecies + ", Date lost: " + post.createdAt.toDate().toLocaleString();
+                popup.textContent = popupInfo || "Lost pet";
+
+                L.circleMarker([location.latitude, location.longitude], {
+                    radius: 8,
+                    color: "#b91c1c",
+                    weight: 2,
+                    fillColor: "#ef4444",
+                    fillOpacity: 1,
+                })
+                    .bindPopup(popup)
+                    .addTo(markerLayer);
+            }
+        });
+
+        return () => {
+            cancelled = true;
+            markerLayer?.remove();
+        };
+    }, [mapInstance, posts]);
 
     return (
         <div className={style.mapview_container}>

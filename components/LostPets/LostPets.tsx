@@ -13,7 +13,13 @@ interface PetPost {
     authorId: string;
     authorName: string;
     authorEmail?: string;
+    lastSeenLocation: Location;
     createdAt: Timestamp;
+}
+
+interface Location {
+    latitude: number;
+    longitude: number;
 }
 
 export function LostPets(){
@@ -24,7 +30,6 @@ export function LostPets(){
     useEffect(() => {
         const db = getFirestore();
         
-        // REMOVED: limit(5) so that all posters are returned from the database
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -71,7 +76,7 @@ export function LostPets(){
                                     )}
                                 </div>
                                 <h3 className={style.poster_pet_name}>Name: {post.petName}</h3>
-                                <h3 className={style.poster_user_id}>Date Posted: {post.createdAt.toDate().toLocaleString()}</h3>
+                                <h3 className={style.poster_date}>Date Posted: {post.createdAt.toDate().toLocaleString()}</h3>
                                 <h3 className={style.poster_species}>Species: {post.petSpecies}</h3>
                                 
                                 {/* Info Button updates your app frame view to show all data */}
