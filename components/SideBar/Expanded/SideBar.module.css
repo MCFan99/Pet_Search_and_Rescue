@@ -7,7 +7,7 @@
     grid-template-columns: 1fr;
     flex-direction: column;
     padding: 25px;
-    gap: 50px;
+    gap: 37px;
     border-radius: 50px;
 }
 
@@ -19,9 +19,10 @@
 }
 
 .side_bar_title_text {
-    font-size: 26px;
+    font-size: 24px;
     color: var(--text);
     text-align: center;
+    
     /* font-family: "Concert One", sans-serif; */
 }
 
@@ -49,7 +50,7 @@
     width: 100%;
     height: min-content;
     padding: 0px;
-    /* gap: 25px; */
+     gap: 30px; 
     justify-items: flex-start;
     align-items: flex-start;
 }
@@ -75,7 +76,7 @@
 }
 
 .side_bar_redirect:hover>span {
-    font-size: 40px;
+    font-size: 35px;
 }
 
 .side_bar_redirect>span {
