@@ -20,11 +20,13 @@ export default function SideBarCollapsed() {
                         className={styles.side_bar_title_icon}
                         src="/logotuah.png"
                         alt="Pet Search and Rescue"
-                        width={150}
-                        height={150}
+                        width={100}
+                        height={100}
                     />
                 </button>
+                
             </div>
+            
 
             <div className={styles.side_bar_redirect_list}>
                 <Redirect iconName="🏠" label="Main Menu" />
