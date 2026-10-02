@@ -13,7 +13,7 @@
     display: grid;
     height: 100%;
     width: 100%;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 25px;
     background-color: var(--tertiary);
@@ -23,8 +23,8 @@
 }
 
 .pet_image {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -37,42 +37,28 @@
 }
 
 .pet_name {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
     padding: 10px;
     font-size: 40px;
     align-items: center;
+    text-align: center;
     flex-direction: column;
     justify-content: space-evenly;
     padding: 10px;
 }
 
 .pet_owner {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
+    grid-column: 1 / 1;
+    grid-row: 2 / 2;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
     padding: 10px;
-    font-size: 40px;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
-    color: var(--text);
-}
-
-.return {
-    grid-column: 2 / 3;
-    grid-row: 3 / 4;
-    display: flex;
-    background-color: var(--foreground);
-    border-radius: 25px;
-    padding: 10px;
-    font-size: 40px;
+    font-size: 30px;
     align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
@@ -81,11 +67,9 @@
 }
 
 .pet_last_seen {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-template-columns: 1fr;
+    grid-column: 2 / 2;
+    grid-row: 2 / 2;
+    display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
     padding: 10px;
@@ -97,9 +81,9 @@
     padding: 10px;
 }
 
-.pet_species {
-    grid-column: 3 / 4;
-    grid-row: 2 / 3;
+.return {
+    grid-column: 3 / 3;
+    grid-row: 1 / 1;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -109,11 +93,13 @@
     flex-direction: column;
     justify-content: space-evenly;
     padding: 10px;
+    color: var(--text);
 }
 
+
 .remove_post {
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
+    grid-column: 3 / 3;
+    grid-row: 2 / 2;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -127,8 +113,8 @@
 }
 
 .pet_found {
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
+    grid-column: 3 / 3;
+    grid-row: 3 / 3;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;

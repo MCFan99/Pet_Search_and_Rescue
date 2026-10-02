@@ -33,7 +33,7 @@
     height: 100%;
     width: 100%;
     grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 25px;
     background-color: var(--tertiary);
     padding: 25px;
@@ -42,8 +42,8 @@
 }
 
 .page_add_image {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -89,8 +89,8 @@
 }
 
 .page_add_name {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
+    grid-column: 2 / 5;
+    grid-row: 1 / 1;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -112,10 +112,24 @@
     font-size: 16px;
     background-color: var(--tertiary);
 }
+.page_post {
+    grid-column: 5 / 5;
+    grid-row: 2 / 2;
+    display: flex;
+    background-color: var(--foreground);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: 40px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    color: var(--text);
+}
 
 .page_return {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
+    grid-column: 5 / 5;
+    grid-row: 3 / 3;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -129,11 +143,9 @@
 }
 
 .page_add_location {
-    grid-column: 2 / 3;
+    grid-column: 1 / 5;
     grid-row: 2 / 4;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-template-columns: 1fr;
     background-color: var(--foreground);
     border-radius: 25px;
     padding: 10px;
@@ -146,8 +158,8 @@
 }
 
 .add_location_map {
-    grid-column: 1 / 2;
-    grid-row: 2 / 5;
+    grid-column: 1 / 40;
+    grid-row: 2 / 20;
     width: 100%;
     height: 100%;
     position: relative;
@@ -161,6 +173,7 @@
     flex-direction: column;
     justify-content: space-evenly;
 }
+
 
 .add_location_canvas {
     width: 100%;
@@ -191,8 +204,8 @@ input::file-selector-button {
 }
 
 .page_species {
-    grid-column: 3 / 4;
-    grid-row: 2 / 3;
+    grid-column: 5 / 5;
+    grid-row: 1 / 1;
     display: flex;
     background-color: var(--foreground);
     border-radius: 25px;
@@ -215,17 +228,3 @@ input::file-selector-button {
     background-color: var(--tertiary);
 }
 
-.page_post {
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
-    display: flex;
-    background-color: var(--foreground);
-    border-radius: 25px;
-    padding: 10px;
-    font-size: 40px;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
-    color: var(--text);
-}

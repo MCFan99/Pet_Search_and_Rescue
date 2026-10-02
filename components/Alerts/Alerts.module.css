@@ -13,3 +13,30 @@
     flex: 1;
     overflow-y: scroll;
 }
+
+.alets_scroll_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 240px;
+    gap: 25px;
+    width: 100%;
+    padding: 15px 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    flex: 1;
+    overflow-y: scroll;
+}
+
+.alert_test {
+    grid-column: 1 / 40;
+    grid-row: 1 / 1;
+    display: flex;
+    background-color: var(--foreground);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: 22px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    color: var(--text);
+}
