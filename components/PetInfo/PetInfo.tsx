@@ -32,14 +32,14 @@ export function PetInfo() {
     }
     let postAction;
     if (!selectedPet.authorId || selectedPet.authorId === user?.uid) {
-        <button className={style.remove_post}
+        postAction = <button className={style.remove_post}
             onClick={() => {handleDeletePost(selectedPet.id); setScreen("Lost Pets")}}
             style={{ backgroundColor: '#ff4d4d', color: 'white' }}
         >
             Delete
         </button>
     } else {
-        <button className={style.remove_post}>
+        postAction = <button className={style.remove_post}>
             I found your pet!
         </button>
     }
