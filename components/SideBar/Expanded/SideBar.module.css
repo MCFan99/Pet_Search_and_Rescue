@@ -19,7 +19,7 @@
 }
 
 .side_bar_title_text {
-    font-size: 3.4vh;
+    font-size: clamp(1.40rem, 3.2vh + 0rem, 1.3rem + 0.41vh);
     color: var(--text);
     text-align: center;
     /* font-family: "Concert One", sans-serif; */
