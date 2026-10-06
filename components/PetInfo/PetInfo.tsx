@@ -1,7 +1,7 @@
 import style from "./PetInfo.module.css"
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ScreenContext, SelectedPetContext, UserContext } from "@/app/contexts";
-import { getFirestore, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, deleteDoc, doc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 {/*
     This will not be on the sidebar;
@@ -13,6 +13,8 @@ export function PetInfo() {
     const [, setScreen] = useContext(ScreenContext);
     const [user] = useContext(UserContext);
     const [selectedPet] = useContext(SelectedPetContext);
+    const [sendingAlert, setSendingAlert] = useState(false);
+    const [alertFeedback, setAlertFeedback] = useState("");
 
     const handleDeletePost = async (postId: string) => {
         try {
@@ -20,6 +22,34 @@ export function PetInfo() {
             await deleteDoc(doc(db, "posts", postId));
         } catch (error) {
             console.error("Error deleting post:", error);
+        }
+    };
+
+    const handleFoundPet = async () => {
+        if (!selectedPet?.authorId || !user?.uid || !user.email || selectedPet.authorId === user.uid) {
+            setAlertFeedback("You must be signed in with an email address to send this alert.");
+            return;
+        }
+
+        setSendingAlert(true);
+        setAlertFeedback("");
+        try {
+            const db = getFirestore();
+            await addDoc(collection(db, "alerts"), {
+                recipientId: selectedPet.authorId,
+                senderId: user.uid,
+                senderEmail: user.email,
+                petId: selectedPet.id,
+                petName: selectedPet.petName,
+                message: "Someone has found your pet!",
+                createdAt: serverTimestamp(),
+            });
+            setAlertFeedback(`Alert sent to ${selectedPet.authorName}.`);
+        } catch (error) {
+            console.error("Error sending found-pet alert:", error);
+            setAlertFeedback("Could not send the alert. Please try again.");
+        } finally {
+            setSendingAlert(false);
         }
     };
 
@@ -39,9 +69,19 @@ export function PetInfo() {
             Delete
         </button>
     } else {
-        postAction = <button className={style.remove_post}>
-            I found your pet!
-        </button>
+        postAction = (
+            <>
+                <button
+                    className={style.remove_post}
+                    onClick={handleFoundPet}
+                    disabled={sendingAlert || !user?.email}
+                >
+                    {sendingAlert ? "Sending..." : "I found your pet!"}
+                </button>
+                {!user?.email && <p role="alert">An account email is required to send this alert.</p>}
+                {alertFeedback && <p role="status">{alertFeedback}</p>}
+            </>
+        );
     }
 
     return (
