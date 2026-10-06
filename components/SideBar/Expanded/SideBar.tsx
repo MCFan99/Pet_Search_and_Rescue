@@ -26,7 +26,7 @@ export default function SideBarExpanded() {
                 </button>
 
                 <h1 className={`concert_one_regular ${styles.side_bar_title_text}`}>
-                    Pet Search and Rescue
+                    Pet Search <br /> and <br /> Rescue
                 </h1>
             </div>
 
