@@ -142,10 +142,11 @@ export function MainMenu(){
                                         <div className={style.poster_placeholder_img}>No Image</div>
                                     )}
                                 </div>
-                                <h3
-                                    className={style.poster_pet_name}
-                                    style={{ fontSize: '18px' }}
-                                >{post.petName}</h3>
+                                <h3 className={style.poster_pet_name} style={{ fontSize: `${Math.min(28, 300 / post.petName.length)}px` }}>
+                                    
+                                {post.petName}
+                                </h3>
+
                                 
                                 {/* Info Button updates your app frame view to show all data */}
                                 <button 
@@ -155,7 +156,7 @@ export function MainMenu(){
                                     Info
                                 </button>
                                 {/* CHANGED: Temporary Delete Button */}
-                                {(!post.authorId || post.authorId === user?.uid) && (
+                                {/* {(!post.authorId || post.authorId === user?.uid) && (
                                     <button 
                                         className={`${style.poster_info_btn} concert_one_regular`}
                                         onClick={() => handleDeletePost(post.id)}
@@ -163,7 +164,7 @@ export function MainMenu(){
                                     >
                                         Delete
                                     </button>
-                                )}
+                                )} */}
                             </div>
                         ))}
                     </div>
