@@ -54,12 +54,17 @@ export function MapView(){
             const { default: L } = await import("leaflet");
             if (cancelled || !mapContainerRef.current) return;
 
+            var northEast = L.latLng(180, 180);
+            var southWest = L.latLng(-180, -180);
+            var bounds = L.latLngBounds(southWest, northEast);
+
             map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
             setMapInstance(map);
             const tiles = L.tileLayer(
                 "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
                 {
                     maxZoom: 16,
+                    minZoom: 4,
                     attribution: 'Tiles courtesy of the <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">USGS National Map</a>',
                 }
             );
@@ -67,6 +72,7 @@ export function MapView(){
                 setTilesRejected(true);
             });
             tiles.addTo(map);
+            map.setMaxBounds(bounds);
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(

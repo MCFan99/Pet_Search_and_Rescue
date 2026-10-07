@@ -62,7 +62,7 @@ export function PetInfo() {
     }
     let postAction;
     if (!selectedPet.authorId || selectedPet.authorId === user?.uid) {
-        postAction = <button className={style.remove_post}
+        postAction = <button className={`${style.remove_post} concert_one_regular`}
             onClick={() => {handleDeletePost(selectedPet.id); setScreen("Lost Pets")}}
             style={{ backgroundColor: '#ff4d4d', color: 'white' }}
         >
@@ -72,7 +72,7 @@ export function PetInfo() {
         postAction = (
             <>
                 <button
-                    className={style.remove_post}
+                    className={`${style.remove_post} concert_one_regular`}
                     onClick={handleFoundPet}
                     disabled={sendingAlert || !user?.email}
                 >
@@ -108,7 +108,6 @@ export function PetInfo() {
                             ? `${selectedPet.lastSeenLocation.latitude}, ${selectedPet.lastSeenLocation.longitude}`
                             : "Not provided"}
                     </div>
-                    <div className={style.pet_species}>Species: {selectedPet.petSpecies}</div>
                     {postAction} 
                 </div>
             ) : (

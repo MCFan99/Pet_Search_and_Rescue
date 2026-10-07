@@ -129,7 +129,10 @@ export function MainMenu(){
                                         <div className={style.poster_placeholder_img}>No Image</div>
                                     )}
                                 </div>
-                                <h3 className={style.poster_pet_name}>{post.petName}</h3>
+                                <h3
+                                    className={style.poster_pet_name}
+                                    style={{ fontSize: '18px' }}
+                                >{post.petName}</h3>
                                 
                                 {/* Info Button updates your app frame view to show all data */}
                                 <button 

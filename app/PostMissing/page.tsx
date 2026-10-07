@@ -29,8 +29,12 @@ export default function PostMissing() {
         async function initializeMap() {
             const { default: L } = await import("leaflet");
             if (cancelled || !mapContainerRef.current) return;
+            var northEast = L.latLng(180, 180);
+            var southWest = L.latLng(-180, -180);
+            var bounds = L.latLngBounds(southWest, northEast);
 
             map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
+            map.setMaxBounds(bounds);
             map.on("click", ({ latlng }) => {
                 setLastSeenLocation({ latitude: latlng.lat, longitude: latlng.lng });
                 if (marker) {
@@ -49,6 +53,7 @@ export default function PostMissing() {
                 "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
                 {
                     maxZoom: 16,
+                    minZoom: 3,
                     attribution: 'Tiles courtesy of the <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">USGS National Map</a>',
                 }
             );
