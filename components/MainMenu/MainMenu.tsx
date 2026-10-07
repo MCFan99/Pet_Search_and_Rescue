@@ -3,6 +3,7 @@ import style from "./MainMenu.module.css"
 import Icon from "../Icon";
 import Image from "next/image";
 import { useState, useEffect, useContext } from "react";
+import { PetSearch, type PetSearchCategory } from "../PetSearch/PetSearch";
 import { ScreenContext, SelectedPetContext, UserContext } from "@/app/contexts";
 import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { redirect } from "next/navigation";
@@ -25,6 +26,16 @@ export function MainMenu(){
     const [user] = useContext(UserContext);
     const [posts, setPosts] = useState<PetPost[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchCategory, setSearchCategory] = useState<PetSearchCategory>("name");
+
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+    const filteredPosts = posts.filter((post) =>
+        post[searchCategory === "name" ? "petName" : "petSpecies"].toLowerCase().includes(normalizedSearchTerm)
+    );
+    const searchSuggestions = [...new Set(posts.map((post) =>
+        post[searchCategory === "name" ? "petName" : "petSpecies"]
+    ))];
 
     useEffect(() => {
         const db = getFirestore();
@@ -95,14 +106,14 @@ export function MainMenu(){
                 />
             </button>
             <div className={style.mainmenu_posters}>
-                {/* TEMPORARY TEST BUTTON */}
-                <button 
-                    onClick={handleAddTestPost}
-                    className={style.test_btn}
-                >
-                    🔧 Test: Add Random Post
-                </button>
-
+                <PetSearch
+                    id="main-menu-pet-search"
+                    category={searchCategory}
+                    value={searchTerm}
+                    suggestions={searchSuggestions}
+                    onCategoryChange={setSearchCategory}
+                    onChange={setSearchTerm}
+                />
                 {loading ? (
                     <p>Loading posters...</p>
                 ) : posts.length === 0 ? (
@@ -113,10 +124,12 @@ export function MainMenu(){
                         width={200}
                         height={200}
                     />
+                ) : filteredPosts.length === 0 ? (
+                    <p role="status">No pets match &quot;{searchTerm}&quot;.</p>
                 ) : (
                     /* The dynamic posters template list */
                     <div className={style.posters_scroll_grid}>
-                        {posts.map((post) => (
+                        {filteredPosts.map((post) => (
                             <div key={post.id} className={style.poster_card}>
                                 <div className={style.poster_image_wrapper}>
                                     {post.petImage ? (

@@ -1,0 +1,51 @@
+.pet_search {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 560px;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.pet_search_controls {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    width: 100%;
+}
+
+.pet_search_category,
+.pet_search_input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pet_search_input {
+    flex: 1;
+}
+
+.pet_search select,
+.pet_search input {
+    width: 100%;
+    border: 1px solid var(--tertiary);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background-color: var(--background);
+    color: var(--text);
+    font: inherit;
+}
+
+.pet_search select:focus-visible,
+.pet_search input:focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+    .pet_search_controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

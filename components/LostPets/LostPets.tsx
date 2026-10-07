@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { ScreenContext, SelectedPetContext } from "@/app/contexts";
 import { getFirestore, collection, query, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 import Image from "next/image";
+import { PetSearch, type PetSearchCategory } from "../PetSearch/PetSearch";
 
 interface PetPost {
     id: string;
@@ -27,6 +28,17 @@ export function LostPets(){
      const [screen, setScreen] = useContext(ScreenContext);
     const [, setSelectedPet] = useContext(SelectedPetContext);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchCategory, setSearchCategory] = useState<PetSearchCategory>("name");
+
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+    const filteredPosts = posts.filter((post) =>
+        post[searchCategory === "name" ? "petName" : "petSpecies"].toLowerCase().includes(normalizedSearchTerm)
+    );
+    const searchSuggestions = [...new Set(posts.map((post) =>
+        post[searchCategory === "name" ? "petName" : "petSpecies"]
+    ))];
+
     useEffect(() => {
         const db = getFirestore();
         
@@ -49,6 +61,14 @@ export function LostPets(){
     }, []);
     return (
         <div className={style.lostpets_container}>
+             <PetSearch
+                id="lost-pets-search"
+                category={searchCategory}
+                value={searchTerm}
+                suggestions={searchSuggestions}
+                onCategoryChange={setSearchCategory}
+                onChange={setSearchTerm}
+            />
              {loading ? (
                     <p>Loading posters...</p>
                 ) : posts.length === 0 ? (
@@ -59,10 +79,12 @@ export function LostPets(){
                         width={200}
                         height={200}
                     />
+                ) : filteredPosts.length === 0 ? (
+                    <p role="status">No pets match &quot;{searchTerm}&quot;.</p>
                 ) : (
                     /* The dynamic posters template list */
                     <div className={style.posters_scroll_grid}>
-                        {posts.map((post) => (
+                        {filteredPosts.map((post) => (
                             <div key={post.id} className={style.poster_card}>
                                 <div className={style.poster_image_wrapper}>
                                     {post.petImage ? (
