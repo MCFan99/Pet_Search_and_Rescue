@@ -12,7 +12,7 @@ providerGoogle.setCustomParameters({
     'login_hint': 'user@example.com'
 });
 
-const app = await GetApp()
+const app = GetApp()
 
 const auth = getAuth(app)
 auth.languageCode = 'it'

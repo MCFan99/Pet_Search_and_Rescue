@@ -4,8 +4,8 @@ import { GetApp } from "../firebase";
 import { 
   getFirestore, 
   initializeFirestore, 
-  persistentLocalCache, 
-  persistentMultipleTabManager, 
+//   persistentLocalCache, 
+//   persistentMultipleTabManager, 
   doc, 
   getDoc, 
   setDoc,
@@ -27,9 +27,9 @@ function getCachedFirestore(): Firestore {
 
     // Initialize exactly ONCE inside the actual browser
     memoizedDb = initializeFirestore(app, {
-        localCache: persistentLocalCache({
-            tabManager: persistentMultipleTabManager(),
-        }),
+        // localCache: persistentLocalCache({
+        //     tabManager: persistentMultipleTabManager(),
+        // }),
     });
 
     return memoizedDb;
