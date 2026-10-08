@@ -19,6 +19,20 @@
     width: 100%;
 }
 
+.alerts_messages {
+    font-size: clamp(1.40rem, 3.2vh + 0rem, 1.3rem + 0.41vh);
+    color: var(--text);
+    text-align: center;
+    /* font-family: "Concert One", sans-serif; */
+}
+
+.alerts_clear {
+    font-size: clamp(3rem, 3.2vh + 1rem, 2.3rem + 1.2vh);
+    color: var(--text);
+    text-align: center;
+    /* font-family: "Concert One", sans-serif; */
+}
+
 .alert_card {
     display: flex;
     flex-direction: column;

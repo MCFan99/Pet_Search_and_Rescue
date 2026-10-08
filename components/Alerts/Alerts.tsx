@@ -52,15 +52,23 @@ export function Alerts() {
 
     return (
         <div className={style.alerts_container}>
-            <h2 className="concert_one_regular">Alerts</h2>
             {!user?.uid ? (
+                <div className={style.alerts_messages}>
                 <p>Sign in to view alerts.</p>
+                </div>
             ) : !currentAlertState ? (
+                <div className={style.alerts_messages}>
                 <p>Loading alerts...</p>
+                </div>
             ) : currentAlertState.error ? (
+                 <div className={style.alerts_messages}>
                 <p role="alert">{currentAlertState.error}</p>
+                </div>
             ) : alerts.length === 0 ? (
+                <div className={style.alerts_clear}>
+                <p></p>
                 <p>No alerts yet.</p>
+                 </div>
             ) : (
                 <div className={style.alerts_list}>
                     {alerts.map((alert) => (
