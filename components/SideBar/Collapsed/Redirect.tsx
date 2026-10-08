@@ -2,6 +2,7 @@ import { ScreenContext } from "@/app/contexts"
 import styles from "./SideBar.module.css"
 import { useContext } from "react"
 import Icon from "@/components/Icon"
+import { AlertsCount } from "@/components/Alerts/AlertsCount";
 
 export default function Redirect({ iconName, label, disableHover = false}: { iconName: string, label: string, disableHover?: boolean}) {
     const [screen, setScreen] = useContext(ScreenContext)
@@ -19,6 +20,7 @@ export default function Redirect({ iconName, label, disableHover = false}: { ico
             onClick={() => setScreen(label)}
         >
             <Icon iconName={iconName} />
+            {label === "Alerts" && <AlertsCount />}
         </button>
     )
 }

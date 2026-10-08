@@ -78,9 +78,17 @@
     font-size: 40px;
 }
 
+.side_bar_redirect:hover>span[aria-label] {
+    font-size: 16px;
+}
+
 .side_bar_redirect>span {
     font-size: 32px;
     transition: 250ms;
+}
+
+.side_bar_redirect>span[aria-label] {
+    font-size: 16px;
 }
 
 .side_bar_redirect_highlighted {

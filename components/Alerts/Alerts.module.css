@@ -28,3 +28,29 @@
     padding: 10px;
     color: var(--text);
 }
+
+.alert_card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.alert_card_header h3 {
+    margin: 0;
+}
+
+.delete_alert_button {
+    flex: 0 0 auto;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    background-color: #dc2626;
+    color: white;
+    cursor: pointer;
+}
+
+.delete_alert_button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}

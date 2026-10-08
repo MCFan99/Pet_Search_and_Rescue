@@ -1,7 +1,7 @@
 'use client'
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/app/contexts";
-import { getFirestore, collection, onSnapshot, query, where } from "firebase/firestore";
+import { getFirestore, collection, deleteDoc, doc, onSnapshot, query, where } from "firebase/firestore";
 import type { Timestamp } from "firebase/firestore";
 import style from "./Alerts.module.css";
 
@@ -20,6 +20,8 @@ export function Alerts() {
         alerts: PetFoundAlert[];
         error: string;
     } | null>(null);
+    const [deletingAlertId, setDeletingAlertId] = useState<string | null>(null);
+    const [deleteError, setDeleteError] = useState("");
 
     useEffect(() => {
         if (!user?.uid) return;
@@ -50,9 +52,23 @@ export function Alerts() {
     const currentAlertState = user?.uid && alertState?.userId === user.uid ? alertState : null;
     const alerts = currentAlertState?.alerts ?? [];
 
+    const handleDeleteAlert = async (alertId: string) => {
+        setDeletingAlertId(alertId);
+        setDeleteError("");
+        try {
+            await deleteDoc(doc(getFirestore(), "alerts", alertId));
+        } catch (error) {
+            console.error("Error deleting alert:", error);
+            setDeleteError("Could not delete the alert. Please try again.");
+        } finally {
+            setDeletingAlertId(null);
+        }
+    };
+
     return (
         <div className={style.alerts_container}>
             <h2 className="concert_one_regular">Alerts</h2>
+            {deleteError && <p role="alert">{deleteError}</p>}
             {!user?.uid ? (
                 <p>Sign in to view alerts.</p>
             ) : !currentAlertState ? (
@@ -65,7 +81,17 @@ export function Alerts() {
                 <div className={style.alerts_list}>
                     {alerts.map((alert) => (
                         <article className={style.alert_card} key={alert.id}>
-                            <h3 className="concert_one_regular">{alert.message}</h3>
+                            <div className={style.alert_card_header}>
+                                <h3 className="concert_one_regular">{alert.message}</h3>
+                                <button
+                                    className={`${style.delete_alert_button} concert_one_regular`}
+                                    type="button"
+                                    onClick={() => handleDeleteAlert(alert.id)}
+                                    disabled={deletingAlertId !== null}
+                                >
+                                    {deletingAlertId === alert.id ? "Deleting..." : "Delete"}
+                                </button>
+                            </div>
                             {alert.petName && <p>Pet: {alert.petName}</p>}
                             <p>Contact email: {alert.senderEmail}</p>
                         </article>

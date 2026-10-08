@@ -2,6 +2,7 @@ import { ScreenContext } from "@/app/contexts"
 import styles from "./SideBar.module.css"
 import { useContext } from "react"
 import Icon from "@/components/Icon"
+import { AlertsCount } from "@/components/Alerts/AlertsCount";
 
 export default function Redirect({ iconName, label }: { iconName: string, label: string }) {
     const [screen, setScreen] = useContext(ScreenContext)
@@ -10,6 +11,7 @@ export default function Redirect({ iconName, label }: { iconName: string, label:
         <button type="button" className={`${styles.side_bar_redirect} ${screen == label ? styles.side_bar_redirect_highlighted : ""} concert_one_regular`} onClick={() => setScreen(label)}>
             <Icon iconName={iconName} />
             {label}
+            {label === "Alerts" && <AlertsCount />}
         </button>
     )
 }
