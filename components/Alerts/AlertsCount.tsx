@@ -27,7 +27,7 @@ export function AlertsCount() {
 
     const count = countState && countState.userId === user?.uid ? countState.count : null;
 
-    return count === null ? null : (
+    return count === null || count === 0 ? null : (
         <span className={styles.alert_count} aria-label={`${count} alerts`}>
             {count}
         </span>
