@@ -35,6 +35,7 @@ export default function PostMissing() {
 
             map = L.map(mapContainerRef.current).setView([39.8283, -98.5795], 5);
             map.setMaxBounds(bounds);
+            map.options.maxBoundsViscosity = 1.0;
             map.on("click", ({ latlng }) => {
                 setLastSeenLocation({ latitude: latlng.lat, longitude: latlng.lng });
                 if (marker) {
@@ -82,8 +83,8 @@ export default function PostMissing() {
     };
 
     const handlePostSubmit = async () => {
-        if (!petName || !species) {
-            alert("Please fill out both Name and Species.");
+        if (!petName || !species || !lastSeenLocation) {
+            alert("Please fill out Name, Species, and Last Seen Location.");
             return;
         }
 

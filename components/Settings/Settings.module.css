@@ -46,10 +46,25 @@
     background-color: var(--foreground);
     border-radius: 25px;
     padding: 10px;
-    font-size: 35px;
+    font-size: 130%;
     align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+.settings_posters_set {
+    width: 30%;
+    height: 10%;
+    background-color: var(--tertiary);
+    border: none;
+    border-radius: 10px;
+    padding: 5px 15px;
+    font-size: 130%;
+    cursor: pointer;
+    color: var(--text);
+    align-items: center;
+    justify-content: space-evenly;
+    transition: transform 0.1s ease;
 }
 
 .settings_dark_mode {

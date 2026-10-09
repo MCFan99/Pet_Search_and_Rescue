@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css";
 
 interface PetCenter {
     name: string;
-    website: string;
+    website: string | null;
     latitude: number;
     longitude: number;
     address: string;
@@ -92,16 +92,18 @@ function parsePetCenters(csv: string): PetCenter[] {
 
         const latitude = Number(columns[2]);
         const longitude = Number(columns[3]);
-        let website: URL;
-        try {
-            website = new URL(columns[1]);
-        } catch {
-            throw new Error(`Invalid website URL in PetCenters.csv row ${index + 1}.`);
+        let website: URL | null = null;
+        if (columns[1] !== "N/A") {
+            try {
+                website = new URL(columns[1]);
+            } catch {
+                throw new Error(`Invalid website URL in PetCenters.csv row ${index + 1}.`);
+            }
         }
 
         if (
             !columns[0].trim() ||
-            !["http:", "https:"].includes(website.protocol) ||
+            (website !== null && !["http:", "https:"].includes(website.protocol)) ||
             !Number.isFinite(latitude) ||
             latitude < -90 ||
             latitude > 90 ||
@@ -114,7 +116,7 @@ function parsePetCenters(csv: string): PetCenter[] {
 
         return {
             name: columns[0].trim(),
-            website: website.href,
+            website: website?.href ?? null,
             latitude,
             longitude,
             address: columns[4]?.trim() ?? "",
@@ -202,6 +204,7 @@ export function MapView(){
             });
             tiles.addTo(map);
             map.setMaxBounds(bounds);
+            map.options.maxBoundsViscosity = 1.0;
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -287,12 +290,14 @@ export function MapView(){
                     popup.append(address);
                 }
 
-                const website = document.createElement("a");
-                website.href = center.website;
-                website.target = "_blank";
-                website.rel = "noopener noreferrer";
-                website.textContent = "Visit website";
-                popup.append(website);
+                if (center.website) {
+                    const website = document.createElement("a");
+                    website.href = center.website;
+                    website.target = "_blank";
+                    website.rel = "noopener noreferrer";
+                    website.textContent = "Visit website";
+                    popup.append(website);
+                }
 
                 L.circleMarker([center.latitude, center.longitude], {
                     radius: 8,
