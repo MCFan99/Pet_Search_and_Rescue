@@ -49,13 +49,29 @@ export function Settings(){
 
     return (
         <div className={style.settings_container}>
-             <button className={style.settings_default_mode} onClick={() => { document.documentElement.dataset.theme = "default" }}>
+             <button className={style.settings_default_mode} onClick={() => { document.documentElement.dataset.theme = "default"
+                updateCustomColor("--background", "#82a8d7"); setPreferedBackground("#82a8d7");
+                updateCustomColor("--foreground", "#6e7fcf"); setPreferedForeground("#6e7fcf");
+                updateCustomColor("--text", "#cbeefe"); setPreferedText("#cbeefe");
+                updateCustomColor("--tertiary", "#5a66d7"); setPreferedTertiary("#5a66d7");
+                updateCustomColor("--highlight", "#6771cb"); setPreferedHighlight("#6771cb");
+              }}>
                 <h3 className="concert_one_regular"> Default Mode</h3>
             </button>
-            <button className={style.settings_light_mode} onClick={() => { document.documentElement.dataset.theme = "light" }}>
+            <button className={style.settings_light_mode} onClick={() => { document.documentElement.dataset.theme = "light"; 
+                updateCustomColor("--background", "#d7e3f8"); setPreferedBackground("#d7e3f8");
+                updateCustomColor("--foreground", "#e5eaf3"); setPreferedForeground("#e5eaf3");
+                updateCustomColor("--text", "#4b4f52"); setPreferedText("#4b4f52");
+                updateCustomColor("--tertiary", "#97b2d2"); setPreferedTertiary("#97b2d2");
+                updateCustomColor("--highlight", "#f8f9ff"); setPreferedHighlight("#f8f9ff"); }}>
                 <h3 className="concert_one_regular"> Light Mode</h3>
             </button>
-            <button className={style.settings_dark_mode} onClick={() => { document.documentElement.dataset.theme = "dark" }}>
+            <button className={style.settings_dark_mode} onClick={() => { document.documentElement.dataset.theme = "dark" 
+                updateCustomColor("--background", "#121314"); setPreferedBackground("#121314");
+                updateCustomColor("--foreground", "#191a1b"); setPreferedForeground("#191a1b");
+                updateCustomColor("--text", "#989898"); setPreferedText("#989898");
+                updateCustomColor("--tertiary", "#373838"); setPreferedTertiary("#373838");
+                updateCustomColor("--highlight", "#2c2d2e"); setPreferedHighlight("#2c2d2e");}}>
                 <h3 className="concert_one_regular">Dark Mode</h3>
             </button>
             <div className={`${style.settings_posters} concert_one_regular`}>
