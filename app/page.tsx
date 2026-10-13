@@ -1,6 +1,6 @@
 'use client'
 import styles from "./page.module.css";
-import { useEffect, useState, createContext, useRef } from "react";
+import { useContext, useEffect, useState, createContext, useRef } from "react";
 import PostMissing from "./PostMissing/page";
 import SideBar from "@/components/SideBar/SideBar";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
@@ -10,6 +10,7 @@ import { Alerts } from "@/components/Alerts/Alerts";
 import { PetInfo } from "@/components/PetInfo/PetInfo";
 import { Settings } from "@/components/Settings/Settings";
 import { Login } from "@/components/Login/Login"
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { SaveUserData } from "@/lib/firebase/database/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ScreenContext, SelectedPetContext, UserContext, type PetInformation } from "./contexts";
@@ -27,6 +28,13 @@ export type Item = {
   petSpecies?: string,
 }
 
+function updateCustomColor(variable: string, value: string) {
+  const root = document.documentElement;
+  root.dataset.theme = "custom";
+  root.style.setProperty(variable, value);
+  console.log("Updated " + variable + " to " + value)
+}
+
 export default function Home() {
 	const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,13 +44,25 @@ export default function Home() {
   // Listen to Firebase Auth state changes
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser({
           uid: firebaseUser.uid,
           name: firebaseUser.displayName || undefined,
           email: firebaseUser.email || undefined,
         });
+        const db = getFirestore();
+        const userDocRef = doc(db, 'users', user?.uid || firebaseUser.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const dataPref = userDocSnap.data();
+          updateCustomColor('--background', dataPref.preferedBackground || '#82a8d7');
+          updateCustomColor('--foreground', dataPref.preferedForeground || '#6e7fcf');
+          updateCustomColor('--text', dataPref.preferedText || '#cbeefe');
+          updateCustomColor('--tertiary', dataPref.preferedTertiary || '#5a66d7');
+          updateCustomColor('--highlight', dataPref.preferedHighlight || '#6771cb');
+          console.log("setting user preferences...")
+        }
       } else {
         setUser(null);
       }

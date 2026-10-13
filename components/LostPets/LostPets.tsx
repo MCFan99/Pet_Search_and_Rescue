@@ -25,7 +25,7 @@ interface Location {
 
 export function LostPets(){
     const [posts, setPosts] = useState<PetPost[]>([]);
-     const [screen, setScreen] = useContext(ScreenContext);
+    const [screen, setScreen] = useContext(ScreenContext);
     const [, setSelectedPet] = useContext(SelectedPetContext);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
