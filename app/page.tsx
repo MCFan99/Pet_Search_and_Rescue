@@ -51,17 +51,21 @@ export default function Home() {
           name: firebaseUser.displayName || undefined,
           email: firebaseUser.email || undefined,
         });
-        const db = getFirestore();
-        const userDocRef = doc(db, 'users', user?.uid || firebaseUser.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          const dataPref = userDocSnap.data();
-          updateCustomColor('--background', dataPref.preferedBackground || '#82a8d7');
-          updateCustomColor('--foreground', dataPref.preferedForeground || '#6e7fcf');
-          updateCustomColor('--text', dataPref.preferedText || '#cbeefe');
-          updateCustomColor('--tertiary', dataPref.preferedTertiary || '#5a66d7');
-          updateCustomColor('--highlight', dataPref.preferedHighlight || '#6771cb');
-          console.log("setting user preferences...")
+        try {
+          const db = getFirestore();
+          const userDocRef = doc(db, 'users', user?.uid || firebaseUser.uid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const dataPref = userDocSnap.data();
+            updateCustomColor('--background', dataPref.preferedBackground || '#82a8d7');
+            updateCustomColor('--foreground', dataPref.preferedForeground || '#6e7fcf');
+            updateCustomColor('--text', dataPref.preferedText || '#cbeefe');
+            updateCustomColor('--tertiary', dataPref.preferedTertiary || '#5a66d7');
+            updateCustomColor('--highlight', dataPref.preferedHighlight || '#6771cb');
+            console.log("setting user preferences...")
+          }
+        } catch (error) {
+          console.error("Error loading user preferences:", error);
         }
       } else {
         setUser(null);
@@ -85,7 +89,9 @@ export default function Home() {
 			console.log(tempUserRef.current)
 			console.log(val)
 			if (val == tempUserRef.current && !(tempUserRef.current == null)) {
-				SaveUserData(tempUserRef.current ?? { uid: "" })
+				SaveUserData(tempUserRef.current).catch((error) => {
+          console.error("Error saving user data:", error);
+        });
 			}
 		}, 10000)
 	}

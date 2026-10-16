@@ -31,6 +31,27 @@ interface Location {
     longitude: number;
 }
 
+const LOST_PET_RADIUS_MILES = 100;
+const PET_CENTER_RADIUS_MILES = 50;
+const EARTH_RADIUS_MILES = 3958.8;
+
+function distanceInMiles(from: Location, to: Location): number {
+    const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
+    const latitudeDifference = toRadians(to.latitude - from.latitude);
+    const longitudeDifference = toRadians(to.longitude - from.longitude);
+    const haversine =
+        Math.sin(latitudeDifference / 2) ** 2 +
+        Math.cos(toRadians(from.latitude)) *
+            Math.cos(toRadians(to.latitude)) *
+            Math.sin(longitudeDifference / 2) ** 2;
+    const boundedHaversine = Math.min(1, Math.max(0, haversine));
+
+    return 2 * EARTH_RADIUS_MILES * Math.atan2(
+        Math.sqrt(boundedHaversine),
+        Math.sqrt(1 - boundedHaversine)
+    );
+}
+
 function parseCsvRows(csv: string): string[][] {
     const rows: string[][] = [];
     let row: string[] = [];
@@ -128,6 +149,7 @@ export function MapView(){
     const [posts, setPosts] = useState<PetPost[]>([]);
     const [petCenters, setPetCenters] = useState<PetCenter[]>([]);
     const [petCentersError, setPetCentersError] = useState<string | null>(null);
+    const [userLocation, setUserLocation] = useState<Location | null>(null);
     const [mapInstance, setMapInstance] =
     useState<import("leaflet").Map | null>(null);
     const mapContainerRef = React.useRef<HTMLDivElement>(null);
@@ -150,6 +172,9 @@ export function MapView(){
     }, []);
 
     useEffect(() => {
+        if (!userLocation) return;
+        const location = userLocation;
+
         let cancelled = false;
 
         async function loadPetCenters() {
@@ -161,7 +186,12 @@ export function MapView(){
 
                 const centers = parsePetCenters(await response.text());
                 if (!cancelled) {
-                    setPetCenters(centers);
+                    setPetCenters(
+                        centers.filter(
+                            (center) =>
+                                distanceInMiles(location, center) <= PET_CENTER_RADIUS_MILES
+                        )
+                    );
                 }
             } catch (error) {
                 if (!cancelled) {
@@ -175,7 +205,7 @@ export function MapView(){
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [userLocation]);
 
     React.useEffect(() => {
         let map: import("leaflet").Map | undefined;
@@ -212,6 +242,7 @@ export function MapView(){
                         if (cancelled || !map) return;
 
                         const userLocation: [number, number] = [coords.latitude, coords.longitude];
+                        setUserLocation({ latitude: coords.latitude, longitude: coords.longitude });
                         map.setView(userLocation, 13);
                         L.circleMarker(userLocation, {
                             radius: 8,
@@ -222,9 +253,17 @@ export function MapView(){
                         }).addTo(map);
                     },
                     () => {
-                        // Keep the default map view if location access is denied or unavailable.
+                        if (!cancelled) {
+                            setPetCentersError(
+                                "Your location could not be determined; pet centers are not shown."
+                            );
+                        }
                     },
                     { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+                );
+            } else {
+                setPetCentersError(
+                    "Your browser does not support location; pet centers are not shown."
                 );
             }
         }
@@ -263,6 +302,11 @@ export function MapView(){
                     continue;
                 }
 
+                const isWithinRange =
+                    userLocation === null ||
+                    distanceInMiles(userLocation, location) <= LOST_PET_RADIUS_MILES;
+                const markerOpacity = isWithinRange ? 1 : 0.5;
+
                 const popup = document.createElement("div");
                 const popupInfo = "Name: " + post.petName + ", Species: " + post.petSpecies + ", Date lost: " + post.createdAt.toDate().toLocaleString();
                 popup.textContent = popupInfo || "Lost pet";
@@ -272,7 +316,8 @@ export function MapView(){
                     color: "#b91c1c",
                     weight: 2,
                     fillColor: "#ef4444",
-                    fillOpacity: 1,
+                    opacity: markerOpacity,
+                    fillOpacity: markerOpacity,
                 })
                     .bindPopup(popup)
                     .addTo(markerLayer);

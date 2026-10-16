@@ -54,6 +54,17 @@
     margin: 0;
 }
 
+.alert_card_email {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.alert_card_email button{
+    background-color: transparent;
+    font-size: 1.2rem;
+}
+
 .delete_alert_button {
     flex: 0 0 auto;
     border: none;

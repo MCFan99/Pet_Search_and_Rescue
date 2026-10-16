@@ -22,6 +22,7 @@ export function Alerts() {
     } | null>(null);
     const [deletingAlertId, setDeletingAlertId] = useState<string | null>(null);
     const [deleteError, setDeleteError] = useState("");
+    const [copied, setCopiedId] = useState<string | null>(null);
 
     useEffect(() => {
         if (!user?.uid) return;
@@ -102,7 +103,12 @@ export function Alerts() {
                                 </button>
                             </div>
                             {alert.petName && <p>Pet: {alert.petName}</p>}
-                            <p>Contact email: {alert.senderEmail}</p>
+                            <div className={style.alert_card_email}>
+                                <p>Contact email: {alert.senderEmail}</p>
+                                <button onClick={async () => { await navigator.clipboard.writeText(alert.senderEmail); setCopiedId(alert.senderEmail) }}>
+                                    {copied === 'copying...' ? '📋 Copied!' : '📋'}
+                                </button>
+                            </div>
                         </article>
                     ))}
                 </div>
