@@ -170,7 +170,7 @@ export function MainMenu(){
                     </div>
                 )}
             </div>
-            <button className={style.mainmenu_map}>
+            <button className={style.mainmenu_map} onClick={() => setScreen("Map View")}>
                 <Image
                     src="/map-view.webp"
                     alt="Map View"
