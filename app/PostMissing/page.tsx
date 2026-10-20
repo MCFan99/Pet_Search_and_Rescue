@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useContext, ChangeEvent } from "react";
 import { UserContext } from "../contexts";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { GetApp } from "@/lib/firebase/firebase";
 import "leaflet/dist/leaflet.css";
 
@@ -88,11 +88,15 @@ export default function PostMissing() {
             return;
         }
 
+        const user = getAuth().currentUser;
+        if (!user) {
+            alert("Please sign in before posting a missing pet.");
+            return;
+        }
+
         setLoading(true);
         try {
-            const auth = getAuth();
             const db = getFirestore(GetApp());
-            const user = auth.currentUser;
             let petImageUrl = "";
 
             if (imageFile) {
@@ -111,14 +115,12 @@ export default function PostMissing() {
                 petName: petName,
                 petSpecies: species,
                 petImage: petImageUrl,
-                authorId: user?.uid,
+                authorId: user.uid,
                 authorName: general?.name || "User",
                 authorEmail: user?.email || "",
                 lastSeenLocation: lastSeenLocation,
+                createdAt: serverTimestamp(),
             });
-            await updateDoc(docRef, {
-                createdAt: serverTimestamp()
-            })
 
             console.log("Document written with ID: ", docRef.id);
             router.push('/');
