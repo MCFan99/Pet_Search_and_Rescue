@@ -1,6 +1,7 @@
 import style from "./PetInfo.module.css"
 import { useContext, useState } from "react";
 import { ScreenContext, SelectedPetContext, UserContext } from "@/app/contexts";
+import { getAuth } from "firebase/auth";
 import { getFirestore, deleteDoc, doc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 {/*
@@ -13,6 +14,7 @@ export function PetInfo() {
     const [, setScreen] = useContext(ScreenContext);
     const [user] = useContext(UserContext);
     const [selectedPet] = useContext(SelectedPetContext);
+    const accountEmail = getAuth().currentUser?.email || user?.email;
     const [sendingAlert, setSendingAlert] = useState(false);
     const [alertFeedback, setAlertFeedback] = useState("");
 
@@ -26,7 +28,11 @@ export function PetInfo() {
     };
 
     const handleFoundPet = async () => {
-        if (!selectedPet?.authorId || !user?.uid || !user.email || selectedPet.authorId === user.uid) {
+        const authUser = getAuth().currentUser;
+        const senderId = authUser?.uid || user?.uid;
+        const senderEmail = authUser?.email || user?.email;
+
+        if (!selectedPet?.authorId || !senderId || !senderEmail || selectedPet.authorId === senderId) {
             setAlertFeedback("You must be signed in with an email address to send this alert.");
             return;
         }
@@ -37,8 +43,8 @@ export function PetInfo() {
             const db = getFirestore();
             await addDoc(collection(db, "alerts"), {
                 recipientId: selectedPet.authorId,
-                senderId: user.uid,
-                senderEmail: user.email,
+                senderId,
+                senderEmail,
                 petId: selectedPet.id,
                 petName: selectedPet.petName,
                 message: "Someone has found your pet!",
@@ -74,11 +80,11 @@ export function PetInfo() {
                 <button
                     className={`${style.remove_post} concert_one_regular`}
                     onClick={handleFoundPet}
-                    disabled={sendingAlert || !user?.email}
+                    disabled={sendingAlert || !accountEmail}
                 >
                     {sendingAlert ? "Sending..." : "I found your pet!"}
                 </button>
-                {!user?.email && <p role="alert">An account email is required to send this alert.</p>}
+                {!accountEmail && <p role="alert">An account email is required to send this alert.</p>}
                 {alertFeedback && <p role="status">{alertFeedback}</p>}
             </>
         );

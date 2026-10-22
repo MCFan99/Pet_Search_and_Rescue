@@ -38,7 +38,8 @@ export async function CreateUserEmailPassword(email: string, password: string): 
         const user = userCredential.user;
         console.log(user)
         try {
-            return CreateUserData(user.uid);
+            const profile = await CreateUserData(user.uid);
+            return profile ? { ...profile, email: user.email || undefined } : null;
 
         } catch (error) {
             console.error(error)
@@ -56,7 +57,8 @@ export async function SignInEmailPassword(email: string, password: string): Prom
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
         const user = userCredential.user;
         console.log(user)
-        return GetUserData(user.uid);
+        const profile = await GetUserData(user.uid);
+        return profile ? { ...profile, email: user.email || undefined } : null;
     } catch (error: unknown) {
         const errorCode = (error as { code?: string }).code;
         const errorMessage = (error as { message?: string }).message;
@@ -75,7 +77,8 @@ export async function SignInGoogle(): Promise<User | null> {
         // The signed-in user info.
         const user = result.user;
         console.log(user);
-        return GetUserData(user.uid);
+        const profile = await GetUserData(user.uid);
+        return profile ? { ...profile, email: user.email || undefined } : null;
         // IdP data available using getAdditionalUserInfo(result)
     } catch (error: unknown) {
         // Handle Errors here.
